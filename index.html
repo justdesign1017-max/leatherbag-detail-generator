@@ -532,6 +532,10 @@ h3{font-size:var(--font-md);font-weight:600;letter-spacing:-.1px;}
 · 수령 후 7일 이내 교환/반품 가능
 · 단순 변심 시 왕복 배송비 고객 부담
 · 주문 제작 상품은 교환/반품 불가</textarea></div>
+<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:8px;">
+<span id="shippingSaveStatus" style="font-size:11px;color:var(--text-muted);"></span>
+<button type="button" class="btn btn-primary" style="padding:6px 20px;font-size:12px;" onclick="saveShipping()">💾 배송 정보 저장</button>
+</div>
 </div></div></div>
 
 <!-- Generate -->
@@ -1673,7 +1677,20 @@ function loadBrandStory(){
   document.getElementById('brandSaveStatus').textContent='✓ 저장된 브랜드 적용됨';
 }
 loadStyleSettings();
+/* ===== Shipping Save/Load ===== */
+function saveShipping(){
+  localStorage.setItem('shippingData',document.getElementById('shippingText').value);
+  document.getElementById('shippingSaveStatus').textContent='✓ 저장됨';
+  showToast('배송/교환/반품 정보가 저장되었습니다!');
+}
+function loadShipping(){
+  var raw=localStorage.getItem('shippingData');
+  if(!raw)return;
+  document.getElementById('shippingText').value=raw;
+  document.getElementById('shippingSaveStatus').textContent='✓ 저장된 정보 적용됨';
+}
 loadBrandStory();
+loadShipping();
 updateUI();
 
 /* ===== Section Highlight on Focus ===== */
