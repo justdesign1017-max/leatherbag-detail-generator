@@ -182,6 +182,17 @@ h3{font-size:var(--font-md);font-weight:600;letter-spacing:-.1px;}
 .prog-bar{width:100%;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s;width:0%;}
 
+/* Thumbnail Maker */
+.thumb-section{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.thumb-canvas-wrap{position:relative;margin:16px auto;background:#f0f0f0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-light);}
+.thumb-canvas-wrap canvas{display:block;cursor:grab;}
+.thumb-source-grid{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
+.thumb-source-item{width:56px;height:56px;border-radius:6px;border:2px solid var(--border-light);overflow:hidden;cursor:pointer;transition:var(--transition);}
+.thumb-source-item:hover{border-color:var(--primary);}
+.thumb-source-item.selected{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary);}
+.thumb-source-item img{width:100%;height:100%;object-fit:cover;}
+.thumb-presets{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
+
 /* Toast & Loading */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(40,40,40,.92);color:#fff;padding:10px 22px;border-radius:10px;font-size:var(--font-base);font-weight:500;z-index:10000;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(8px);box-shadow:var(--shadow-lg);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
@@ -526,6 +537,69 @@ h3{font-size:var(--font-md);font-weight:600;letter-spacing:-.1px;}
 <!-- Generate -->
 <div style="text-align:center;padding:24px 0;">
   <button class="btn btn-primary" style="font-size:15px;padding:14px 44px;border-radius:10px;letter-spacing:-.2px;" onclick="generateFull()">✨ 상세페이지 생성</button>
+</div>
+
+<!-- Thumbnail Maker -->
+<div class="thumb-section">
+  <h2 style="margin-bottom:4px;">🖼️ 썸네일 만들기</h2>
+  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">업로드한 사진으로 플랫폼별 썸네일을 만들 수 있습니다.</p>
+
+  <h3 style="margin-bottom:6px;">플랫폼</h3>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:14px;">
+    <label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;gap:7px;width:100%;"><input type="radio" name="thumbPreset" value="1000" checked><span style="font-weight:600;">스마트스토어</span></div>
+      <span style="font-size:11px;color:var(--text-muted);padding-left:22px;">1000 × 1000px · JPG · 4MB 이하</span>
+    </label>
+    <label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;gap:7px;width:100%;"><input type="radio" name="thumbPreset" value="720"><span style="font-weight:600;">아이디어스</span></div>
+      <span style="font-size:11px;color:var(--text-muted);padding-left:22px;">720 × 720px · JPG/PNG · 50MB 이하</span>
+    </label>
+    <label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;gap:7px;width:100%;"><input type="radio" name="thumbPreset" value="500"><span style="font-weight:600;">쿠팡</span></div>
+      <span style="font-size:11px;color:var(--text-muted);padding-left:22px;">500 × 500px · JPG/PNG · 2MB 이하</span>
+    </label>
+    <label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;gap:7px;width:100%;"><input type="radio" name="thumbPreset" value="800"><span style="font-weight:600;">자체몰</span></div>
+      <span style="font-size:11px;color:var(--text-muted);padding-left:22px;">800 × 800px · JPG/PNG · 10MB 이하</span>
+    </label>
+  </div>
+
+  <h3 style="margin-bottom:6px;">원본 사진 선택</h3>
+  <div class="thumb-source-grid" id="thumbSourceGrid">
+    <div style="font-size:12px;color:var(--text-muted);padding:8px;">사진을 먼저 업로드해주세요</div>
+  </div>
+
+  <h3 style="margin-bottom:4px;">모드</h3>
+  <div style="display:flex;gap:6px;margin-bottom:12px;">
+    <label class="opt-item" style="flex:1;"><input type="radio" name="thumbMode" value="letterbox" checked> 여백 (원본 유지)</label>
+    <label class="opt-item" style="flex:1;"><input type="radio" name="thumbMode" value="crop"> 크롭 (드래그)</label>
+  </div>
+
+  <div id="thumbLetterboxOpts" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+    <span style="font-size:13px;font-weight:500;">배경색</span>
+    <input type="color" id="thumbBgColor" value="#FFFFFF" style="width:32px;height:32px;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:0;" onchange="renderThumb()">
+    <button type="button" class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="document.getElementById('thumbBgColor').value='#FFFFFF';renderThumb()">흰색</button>
+    <button type="button" class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="document.getElementById('thumbBgColor').value='#FAF6F1';renderThumb()">베이지</button>
+    <button type="button" class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="document.getElementById('thumbBgColor').value='#000000';renderThumb()">블랙</button>
+  </div>
+
+  <div class="thumb-canvas-wrap" id="thumbCanvasWrap" style="width:300px;height:300px;">
+    <canvas id="thumbCanvas" width="300" height="300"
+      onmousedown="thumbDragStart(event)" onmousemove="thumbDragMove(event)" onmouseup="thumbDragEnd()" onmouseleave="thumbDragEnd()"
+      ontouchstart="thumbDragStart(event)" ontouchmove="thumbDragMove(event)" ontouchend="thumbDragEnd()"></canvas>
+  </div>
+  <div id="thumbCropZoom" style="display:none;align-items:center;justify-content:center;gap:10px;margin-top:8px;">
+    <span style="font-size:12px;">축소</span>
+    <input type="range" id="thumbCropScale" min="100" max="300" value="100" step="5" style="flex:0 0 160px;accent-color:var(--primary);" oninput="thumbState.cropScale=this.value/100;document.getElementById('thumbScaleLabel').textContent=this.value+'%';renderThumb();">
+    <span style="font-size:12px;">확대</span>
+    <span id="thumbScaleLabel" style="font-size:12px;font-weight:600;min-width:36px;text-align:center;">100%</span>
+  </div>
+  <div id="thumbCropHint" style="display:none;text-align:center;font-size:11px;color:var(--text-muted);margin-top:4px;">이미지를 드래그하여 위치를 조정하세요</div>
+
+  <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
+    <input type="text" id="thumbFileName" placeholder="파일명 입력" style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);outline:none;" oninput="" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+    <button type="button" class="btn btn-primary" style="white-space:nowrap;" onclick="downloadThumb()">📥 저장</button>
+  </div>
 </div>
 
 <!-- Save/Load -->
@@ -1398,6 +1472,154 @@ function applyData(d){
 /* ===== Helpers ===== */
 function showLoading(s,t){var el=document.getElementById('loadingOverlay');if(s){document.getElementById('loadingText').textContent=t||'처리 중...';el.classList.add('active');}else el.classList.remove('active');}
 function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
+/* ===== Thumbnail Maker ===== */
+var thumbState={srcIndex:-1,offsetX:0,offsetY:0,dragging:false,dragStartX:0,dragStartY:0,cropScale:1,cachedImg:null,cachedSrc:''};
+
+function updateThumbSourceGrid(){
+  var grid=document.getElementById('thumbSourceGrid');
+  if(!state.images.length){grid.innerHTML='<div style="font-size:12px;color:var(--text-muted);padding:8px;">사진을 먼저 업로드해주세요</div>';return;}
+  grid.innerHTML='';
+  state.images.forEach(function(img,idx){
+    var d=document.createElement('div');
+    d.className='thumb-source-item'+(thumbState.srcIndex===idx?' selected':'');
+    d.innerHTML='<img src="'+img.dataUrl+'">';
+    d.onclick=function(){thumbState.srcIndex=idx;thumbState.offsetX=0;thumbState.offsetY=0;updateThumbSourceGrid();renderThumb();};
+    grid.appendChild(d);
+  });
+  if(thumbState.srcIndex<0&&state.images.length>0){thumbState.srcIndex=0;grid.children[0].classList.add('selected');renderThumb();}
+}
+
+function getThumbSize(){return parseInt(gR('thumbPreset'))||1000;}
+function getThumbMode(){return gR('thumbMode')||'letterbox';}
+
+function loadThumbImage(callback){
+  if(thumbState.srcIndex<0||!state.images[thumbState.srcIndex])return;
+  var src=state.images[thumbState.srcIndex].dataUrl;
+  if(thumbState.cachedImg&&thumbState.cachedSrc===src){callback(thumbState.cachedImg);return;}
+  var img=new Image();
+  img.onload=function(){thumbState.cachedImg=img;thumbState.cachedSrc=src;callback(img);};
+  img.src=src;
+}
+function drawThumb(img){
+  var canvas=document.getElementById('thumbCanvas');
+  var ctx=canvas.getContext('2d');
+  var ps=300;
+  var bgColor=document.getElementById('thumbBgColor').value;
+  ctx.clearRect(0,0,ps,ps);
+  ctx.fillStyle=bgColor;ctx.fillRect(0,0,ps,ps);
+  var mode=getThumbMode();
+  if(mode==='letterbox'){
+    var scale=Math.min(ps/img.width,ps/img.height);
+    var w=img.width*scale,h=img.height*scale;
+    ctx.drawImage(img,(ps-w)/2,(ps-h)/2,w,h);
+  }else{
+    var baseScale=Math.max(ps/img.width,ps/img.height);
+    var scale=baseScale*thumbState.cropScale;
+    var w=img.width*scale,h=img.height*scale;
+    var maxOX=Math.max(0,(w-ps)/2),maxOY=Math.max(0,(h-ps)/2);
+    thumbState.offsetX=Math.max(-maxOX,Math.min(maxOX,thumbState.offsetX));
+    thumbState.offsetY=Math.max(-maxOY,Math.min(maxOY,thumbState.offsetY));
+    ctx.drawImage(img,(ps-w)/2+thumbState.offsetX,(ps-h)/2+thumbState.offsetY,w,h);
+  }
+}
+function renderThumb(){
+  var letterboxOpts=document.getElementById('thumbLetterboxOpts');
+  var cropHint=document.getElementById('thumbCropHint');
+  var cropZoom=document.getElementById('thumbCropZoom');
+  if(getThumbMode()==='letterbox'){letterboxOpts.style.display='flex';cropHint.style.display='none';cropZoom.style.display='none';}
+  else{letterboxOpts.style.display='none';cropHint.style.display='block';cropZoom.style.display='flex';}
+  if(thumbState.srcIndex<0||!state.images[thumbState.srcIndex])return;
+  loadThumbImage(function(img){drawThumb(img);});
+}
+
+// 크롭 드래그
+function thumbDragStart(e){
+  if(getThumbMode()!=='crop')return;
+  e.preventDefault();
+  var p=e.touches?e.touches[0]:e;
+  thumbState.dragging=true;
+  thumbState.dragStartX=p.clientX;
+  thumbState.dragStartY=p.clientY;
+  document.getElementById('thumbCanvas').style.cursor='grabbing';
+}
+function thumbDragMove(e){
+  if(!thumbState.dragging)return;
+  e.preventDefault();
+  var p=e.touches?e.touches[0]:e;
+  thumbState.offsetX+=(p.clientX-thumbState.dragStartX);
+  thumbState.offsetY+=(p.clientY-thumbState.dragStartY);
+  thumbState.dragStartX=p.clientX;
+  thumbState.dragStartY=p.clientY;
+  renderThumb();
+}
+function thumbDragEnd(){
+  if(thumbState.dragging){
+    thumbState.dragging=false;
+    document.getElementById('thumbCanvas').style.cursor='grab';
+  }
+}
+
+function downloadThumb(){
+  if(thumbState.srcIndex<0||!state.images[thumbState.srcIndex]){showToast('사진을 먼저 선택해주세요.');return;}
+  loadThumbImage(function(img){
+    var size=getThumbSize();
+    var canvas=document.createElement('canvas');
+    canvas.width=size;canvas.height=size;
+    var ctx=canvas.getContext('2d');
+    var bgColor=document.getElementById('thumbBgColor').value;
+    ctx.fillStyle=bgColor;ctx.fillRect(0,0,size,size);
+    var mode=getThumbMode();
+    if(mode==='letterbox'){
+      var scale=Math.min(size/img.width,size/img.height);
+      var w=img.width*scale,h=img.height*scale;
+      ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+    }else{
+      var baseScale=Math.max(size/img.width,size/img.height);
+      var scale=baseScale*thumbState.cropScale;
+      var w=img.width*scale,h=img.height*scale;
+      var ratio=size/300;
+      var ox=thumbState.offsetX*ratio,oy=thumbState.offsetY*ratio;
+      var maxOX=Math.max(0,(w-size)/2),maxOY=Math.max(0,(h-size)/2);
+      ox=Math.max(-maxOX,Math.min(maxOX,ox));
+      oy=Math.max(-maxOY,Math.min(maxOY,oy));
+      ctx.drawImage(img,(size-w)/2+ox,(size-h)/2+oy,w,h);
+    }
+    var preset=gR('thumbPreset');
+    var platformInfo={
+      '1000':{name:'스마트스토어',maxMB:4,format:'image/jpeg'},
+      '720':{name:'아이디어스',maxMB:50,format:'image/jpeg'},
+      '500':{name:'쿠팡',maxMB:2,format:'image/jpeg'},
+      '800':{name:'자체몰',maxMB:10,format:'image/jpeg'}
+    };
+    var info=platformInfo[preset]||{name:preset,maxMB:4,format:'image/jpeg'};
+    var maxBytes=info.maxMB*1024*1024;
+    var ext=info.format==='image/png'?'png':'jpg';
+    // 품질을 조절하면서 용량 맞추기
+    var quality=0.95;
+    var dataUrl=canvas.toDataURL(info.format,quality);
+    while(dataUrl.length*0.75>maxBytes&&quality>0.3){
+      quality-=0.05;
+      dataUrl=canvas.toDataURL(info.format,quality);
+    }
+    var fileSizeKB=Math.round(dataUrl.length*0.75/1024);
+    var customName=document.getElementById('thumbFileName').value.trim();
+    var a=document.createElement('a');
+    a.download=(customName||collect().productName||'썸네일')+'_'+info.name+'_'+size+'x'+size+'.'+ext;
+    a.href=dataUrl;
+    a.click();
+    showToast(info.name+' '+size+'×'+size+' ('+fileSizeKB+'KB) 다운로드 완료!');
+  });
+}
+
+// 모드/프리셋 변경 시 렌더링
+document.querySelectorAll('input[name="thumbMode"],input[name="thumbPreset"]').forEach(function(el){
+  el.addEventListener('change',function(){thumbState.offsetX=0;thumbState.offsetY=0;thumbState.cropScale=1;document.getElementById('thumbCropScale').value=100;document.getElementById('thumbScaleLabel').textContent='100%';renderThumb();});
+});
+
+// 이미지 업로드 후 소스 그리드 갱신을 위해 기존 renderImages 확장
+var _origRenderImages=renderImages;
+renderImages=function(){_origRenderImages();updateThumbSourceGrid();};
 
 /* ===== Style Settings Save/Load ===== */
 function saveStyleSettings(){
