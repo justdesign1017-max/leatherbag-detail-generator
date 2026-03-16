@@ -6,160 +6,203 @@
 <title>가죽가방 상세페이지 생성기 v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
-  --primary:#C9A96E;--bg:#FAF6F1;--text:#3A3A3A;--border:#E0D5C7;
-  --card-bg:#FFFFFF;--hover:#F0E8DC;--accent:#8B7355;--success:#4CAF50;
-  --danger:#E74C3C;--radius:12px;--transition:0.3s cubic-bezier(0.4,0,0.2,1);
+  --primary:#C9A96E;--primary-hover:#B8944D;--primary-light:rgba(201,169,110,.08);--primary-medium:rgba(201,169,110,.15);
+  --bg:#FAF6F1;--text:#3A3A3A;--text-secondary:#777;--text-muted:#AAA;
+  --border:#E0D5C7;--border-light:#EDE6DC;
+  --card-bg:#FFFFFF;--hover:#F5EDE3;--accent:#8B7355;
+  --success:#4CAF50;--danger:#E74C3C;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.04);--shadow-md:0 2px 12px rgba(0,0,0,.06);--shadow-lg:0 4px 24px rgba(0,0,0,.1);
+  --transition:0.25s cubic-bezier(0.4,0,0.2,1);
+  --font-xs:11px;--font-sm:12px;--font-base:13px;--font-md:14px;--font-lg:16px;--font-xl:18px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
-h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:var(--transition);}
-.btn-primary{background:var(--primary);color:#fff;}.btn-primary:hover{background:#B8944D;transform:translateY(-1px);}
-.btn-secondary{background:var(--card-bg);color:var(--text);border:1px solid var(--border);}.btn-secondary:hover{background:var(--hover);}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
-.badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--primary);color:#fff;font-size:12px;font-weight:600;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:var(--font-base);-webkit-font-smoothing:antialiased;}
+h2{font-size:var(--font-lg);font-weight:600;letter-spacing:-.2px;}
+h3{font-size:var(--font-md);font-weight:600;letter-spacing:-.1px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);font-weight:500;cursor:pointer;transition:var(--transition);letter-spacing:-.1px;}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 1px 3px rgba(201,169,110,.3);}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 3px 8px rgba(201,169,110,.3);}
+.btn-secondary{background:var(--card-bg);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--hover);border-color:var(--primary);}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--primary);color:#fff;font-size:var(--font-xs);font-weight:700;}
 
 /* Header */
-.header{background:var(--card-bg);border-bottom:1px solid var(--border);padding:12px 20px;position:sticky;top:0;z-index:200;box-shadow:0 1px 8px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between;}
-.header-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;}
-.header-title span{font-size:24px;}
+.header{background:var(--card-bg);border-bottom:1px solid var(--border-light);padding:14px 24px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:space-between;}
+.header-title{display:flex;align-items:center;gap:10px;font-size:var(--font-xl);font-weight:700;letter-spacing:-.3px;}
+.header-title span{font-size:22px;}
 .header-actions{display:flex;gap:8px;}
 
 /* Layout */
-.split-layout{display:flex;gap:0;min-height:calc(100vh - 56px);}
-.input-panel{flex:1;padding:20px;max-width:800px;margin:0 auto;}
+.split-layout{min-height:calc(100vh - 56px);}
+.input-panel{width:50%;max-width:800px;padding:20px 24px;}
+
+/* Live Preview Panel */
+.preview-panel{position:fixed;top:56px;left:50%;right:0;height:calc(100vh - 56px);background:#EEEAE4;border-left:1px solid var(--border-light);display:flex;flex-direction:column;overflow:hidden;z-index:100;pointer-events:auto;}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--card-bg);border-bottom:1px solid var(--border-light);flex-shrink:0;}
+.preview-header-title{font-size:var(--font-base);font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;}
+.preview-header-actions{display:flex;gap:6px;align-items:center;}
+.preview-zoom{display:flex;align-items:center;gap:4px;font-size:var(--font-sm);color:var(--text-secondary);}
+.preview-zoom button{width:26px;height:26px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;cursor:pointer;font-size:var(--font-md);display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.preview-zoom button:hover{background:var(--hover);border-color:var(--primary);}
+.preview-zoom span{min-width:36px;text-align:center;font-weight:600;font-size:var(--font-sm);}
+.preview-body{flex:1;overflow:auto;padding:16px;}
+.preview-frame{background:#fff;box-shadow:var(--shadow-lg);border-radius:2px;overflow:hidden;margin:0 auto;}
+.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);text-align:center;gap:10px;}
+.preview-empty-icon{font-size:44px;opacity:.4;}
+.preview-empty-text{font-size:var(--font-md);line-height:1.6;color:var(--text-secondary);}
+.preview-empty-hint{font-size:var(--font-sm);opacity:.5;}
+@media(max-width:1100px){.preview-panel{display:none;}.input-panel{width:100%;max-width:800px;margin:0 auto;}}
 
 /* Fullscreen Preview */
-.fullscreen-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);align-items:flex-start;justify-content:center;overflow:auto;padding:20px;}
+.fullscreen-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);align-items:flex-start;justify-content:center;overflow:auto;padding:20px;backdrop-filter:blur(4px);}
 .fullscreen-overlay.active{display:flex;}
-.fullscreen-close{position:fixed;top:16px;right:16px;z-index:301;background:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.2);}
-.fullscreen-frame{background:#fff;box-shadow:0 4px 32px rgba(0,0,0,.2);margin:20px auto;}
-
-/* API Key */
-.api-section{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.api-section label{font-weight:600;font-size:13px;white-space:nowrap;}
-.api-section input{flex:1;min-width:160px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;outline:none;}
-.api-section input:focus{border-color:var(--primary);}
-.api-hint{width:100%;font-size:11px;color:#999;margin-top:2px;}
+.fullscreen-close{position:fixed;top:16px;right:16px;z-index:301;background:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:var(--shadow-md);transition:var(--transition);}
+.fullscreen-close:hover{background:var(--bg);transform:scale(1.05);}
+.fullscreen-frame{background:#fff;box-shadow:0 4px 32px rgba(0,0,0,.15);margin:20px auto;}
 
 /* Upload */
-.upload-section{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px 16px;text-align:center;cursor:pointer;background:var(--bg);transition:var(--transition);}
-.upload-zone:hover,.upload-zone.dragover{border-color:var(--primary);background:rgba(201,169,110,.05);}
-.upload-zone-icon{font-size:40px;margin-bottom:6px;}
-.image-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
-.image-item{position:relative;width:100px;border:2px solid var(--border);border-radius:6px;overflow:hidden;background:#fff;cursor:grab;}
+.upload-section{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:36px 16px;text-align:center;cursor:pointer;background:var(--bg);transition:var(--transition);}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--primary);background:var(--primary-light);}
+.upload-zone-icon{font-size:36px;margin-bottom:8px;opacity:.7;}
+.image-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.image-item{position:relative;width:100px;border:2px solid var(--border-light);border-radius:8px;overflow:hidden;background:#fff;cursor:grab;transition:var(--transition);}
+.image-item:hover{border-color:var(--primary);box-shadow:var(--shadow-sm);}
 .image-item.dragging{opacity:.4;}.image-item.drag-over{border-color:var(--primary);}
 .image-item img{width:100%;height:80px;object-fit:cover;display:block;}
-.image-item-badge{position:absolute;top:3px;left:3px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;}
-.image-item-delete{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.image-item-badge{position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.2px;}
+.image-item-delete{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;cursor:pointer;font-size:var(--font-sm);display:flex;align-items:center;justify-content:center;transition:var(--transition);}
 .image-item-delete:hover{background:var(--danger);}
-.image-item-tag select{width:100%;padding:3px 4px;border:none;border-top:1px solid var(--border);font-family:inherit;font-size:11px;background:#fff;}
-.image-add-btn{width:100px;height:110px;border:2px dashed var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:var(--bg);font-size:12px;color:#999;}
-.image-add-btn:hover{border-color:var(--primary);color:var(--primary);}
-.image-add-btn span{font-size:24px;}
+.image-item-tag select{width:100%;padding:4px 6px;border:none;border-top:1px solid var(--border-light);font-family:inherit;font-size:var(--font-xs);background:#fff;color:var(--text);}
+.image-add-btn{width:100px;height:110px;border:2px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:var(--bg);font-size:var(--font-sm);color:var(--text-muted);transition:var(--transition);}
+.image-add-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.image-add-btn span{font-size:22px;}
 
 /* Accordion */
-.accordion{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
-.acc-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none;}
+.accordion{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.acc-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;transition:var(--transition);}
 .acc-hd:hover{background:var(--hover);}
-.acc-hd-left{display:flex;align-items:center;gap:8px;font-size:14px;}
-.acc-hd-left .icon{font-size:18px;}
-.acc-arrow{font-size:11px;color:#999;transition:transform .3s;}
+.acc-hd-left{display:flex;align-items:center;gap:8px;font-size:var(--font-md);}
+.acc-hd-left .icon{font-size:16px;}
+.acc-arrow{font-size:10px;color:var(--text-muted);transition:transform .3s;}
 .accordion.open .acc-arrow{transform:rotate(180deg);}
 .acc-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1);}
 .accordion.open .acc-body{max-height:3000px;}
-.acc-content{padding:0 16px 16px;}
+.acc-content{padding:2px 16px 16px;}
 
 /* Options */
-.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;}
-.opt-item{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;transition:var(--transition);}
-.opt-item:hover{background:var(--hover);border-color:var(--primary);}
-.opt-item.selected{background:rgba(201,169,110,.1);border-color:var(--primary);}
-.opt-item input[type="radio"],.opt-item input[type="checkbox"]{accent-color:var(--primary);width:15px;height:15px;cursor:pointer;}
-.custom-row{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;margin-top:6px;}
-.custom-row input[type="text"]{flex:1;border:none;outline:none;font-family:inherit;font-size:13px;background:transparent;}
-.pocket-opt{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;}
-.pocket-opt select,.pocket-opt input[type="number"]{width:44px;padding:2px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:12px;text-align:center;}
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;}
+.opt-item{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid var(--border-light);border-radius:var(--radius-sm);cursor:pointer;font-size:var(--font-base);transition:var(--transition);background:var(--card-bg);}
+.opt-item:hover{background:var(--hover);border-color:var(--border);}
+.opt-item.selected{background:var(--primary-light);border-color:var(--primary);}
+.opt-item input[type="radio"],.opt-item input[type="checkbox"]{accent-color:var(--primary);width:14px;height:14px;cursor:pointer;}
+.custom-row{display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--border-light);border-radius:var(--radius-sm);margin-top:6px;background:var(--card-bg);}
+.custom-row input[type="text"]{flex:1;border:none;outline:none;font-family:inherit;font-size:var(--font-base);background:transparent;}
+.pocket-opt{display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:var(--font-base);background:var(--card-bg);}
+.pocket-opt select,.pocket-opt input[type="number"]{width:44px;padding:3px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:var(--font-sm);text-align:center;}
+
+/* Color Cards */
+.color-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.color-card{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border:1.5px solid var(--border-light);border-radius:8px;cursor:pointer;transition:var(--transition);background:var(--card-bg);min-width:64px;}
+.color-card:hover{border-color:var(--primary);background:var(--primary-light);}
+.color-card.selected{border-color:var(--primary);background:var(--primary-medium);box-shadow:0 0 0 1px var(--primary);}
+.color-card input{display:none;}
+.color-swatch{width:32px;height:32px;border-radius:50%;border:2px solid rgba(0,0,0,.08);box-shadow:inset 0 1px 3px rgba(0,0,0,.1);}
+.color-card-label{font-size:11px;font-weight:600;color:var(--text);line-height:1;}
+
+/* Custom Color Card */
+.custom-color-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border:1.5px solid var(--primary);border-radius:8px;background:var(--primary-medium);min-width:64px;position:relative;}
+.custom-color-item .color-swatch{cursor:pointer;position:relative;}
+.custom-color-item .color-swatch:hover{transform:scale(1.1);}
+.custom-color-item input[type="color"]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;}
+.custom-color-remove{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1;}
+.custom-color-remove:hover{background:var(--danger);}
+.custom-color-name{border:none;outline:none;font-family:inherit;font-size:11px;font-weight:600;text-align:center;width:56px;background:transparent;color:var(--text);}
 
 /* Wear Cards */
 .wear-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.wear-card{display:flex;align-items:center;padding:8px 14px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--transition);background:var(--bg);}
-.wear-card:hover{border-color:var(--primary);}
-.wear-card.selected{border-color:var(--primary);background:rgba(201,169,110,.12);box-shadow:0 0 0 1px var(--primary);}
-.wear-card-label{font-size:13px;font-weight:600;}
+.wear-card{display:flex;align-items:center;padding:9px 16px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--transition);background:var(--card-bg);}
+.wear-card:hover{border-color:var(--primary);background:var(--primary-light);}
+.wear-card.selected{border-color:var(--primary);background:var(--primary-medium);box-shadow:0 0 0 1px var(--primary);}
+.wear-card-label{font-size:var(--font-base);font-weight:600;}
 .wear-card input{display:none;}
 
 /* Size */
 .size-option-area{margin-top:10px;}
 .size-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
-.size-row input[type="text"]{padding:7px 8px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;outline:none;}
-.size-row input:focus{border-color:var(--primary);}
+.size-row input[type="text"]{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);outline:none;transition:var(--transition);}
+.size-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}
 .size-row .sz-name{width:70px;}.size-row .sz-dim{width:60px;text-align:center;}
-.size-row span{font-size:12px;color:#999;}
-.sz-remove{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--danger);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.size-row span{font-size:var(--font-sm);color:var(--text-secondary);}
+.sz-remove{width:24px;height:24px;border-radius:50%;border:1px solid var(--border-light);background:#fff;color:var(--danger);cursor:pointer;font-size:var(--font-md);display:flex;align-items:center;justify-content:center;transition:var(--transition);}
 .sz-remove:hover{background:var(--danger);color:#fff;}
-.add-sz-btn{padding:5px 14px;border:1px dashed var(--border);border-radius:6px;background:transparent;font-family:inherit;font-size:12px;color:var(--accent);cursor:pointer;}
-.add-sz-btn:hover{border-color:var(--primary);}
+.add-sz-btn{padding:6px 16px;border:1px dashed var(--border);border-radius:var(--radius-sm);background:transparent;font-family:inherit;font-size:var(--font-sm);color:var(--accent);cursor:pointer;transition:var(--transition);}
+.add-sz-btn:hover{border-color:var(--primary);color:var(--primary);}
 
 /* Input fields */
-.inp-group{margin-bottom:10px;}
-.inp-group label{display:block;font-weight:500;font-size:13px;margin-bottom:3px;}
+.inp-group{margin-bottom:12px;}
+.inp-group label{display:block;font-weight:600;font-size:var(--font-base);margin-bottom:5px;color:var(--text);letter-spacing:-.1px;}
 .inp-group .req{color:var(--danger);margin-left:2px;}
-.inp-group input[type="text"],.inp-group input[type="number"]{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;outline:none;}
-.inp-group input:focus{border-color:var(--primary);}
-.inp-group textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;outline:none;resize:vertical;min-height:140px;line-height:1.8;}
-.inp-group textarea:focus{border-color:var(--primary);}
+.inp-group input[type="text"],.inp-group input[type="number"]{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);outline:none;transition:var(--transition);}
+.inp-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}
+.inp-group textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);outline:none;resize:vertical;min-height:140px;line-height:1.8;transition:var(--transition);}
+.inp-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}
 .inp-row{display:flex;gap:10px;}.inp-row .inp-group{flex:1;}
 
 /* Save/Load */
-.save-load{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px;}
+.save-load{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);padding:18px;margin-top:14px;box-shadow:var(--shadow-sm);}
 .save-load h3{margin-bottom:10px;}
 .sl-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;}
-.sl-row input[type="text"]{flex:1;min-width:140px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;outline:none;}
-.sl-row input:focus{border-color:var(--primary);}
-.load-label{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg);transition:var(--transition);}
+.sl-row input[type="text"]{flex:1;min-width:140px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:var(--font-base);outline:none;transition:var(--transition);}
+.sl-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}
+.load-label{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:var(--font-base);font-weight:500;cursor:pointer;background:var(--bg);transition:var(--transition);}
 .load-label:hover{background:var(--hover);border-color:var(--primary);}
 
 /* Download Panel */
-.dl-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.dl-panel{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
 .dl-tabs{display:flex;margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-.dl-tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;background:var(--bg);border:none;font-family:inherit;}
+.dl-tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:var(--font-base);font-weight:500;background:var(--bg);border:none;font-family:inherit;transition:var(--transition);}
 .dl-tab.active{background:var(--primary);color:#fff;}
 .dl-tab:not(.active):hover{background:var(--hover);}
 .dl-tc{display:none;}.dl-tc.active{display:block;}
-.dl-opt{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:8px;flex-wrap:wrap;}
+.dl-opt{display:flex;align-items:center;gap:6px;font-size:var(--font-base);margin-bottom:8px;flex-wrap:wrap;}
 .dl-opt input{accent-color:var(--primary);}
 .dl-actions{display:flex;gap:10px;flex-wrap:wrap;}
 .prog-wrap{display:none;margin-top:12px;}.prog-wrap.active{display:block;}
-.prog-label{font-size:13px;margin-bottom:4px;}
-.prog-bar{width:100%;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-label{font-size:var(--font-base);margin-bottom:4px;}
+.prog-bar{width:100%;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s;width:0%;}
 
 /* Toast & Loading */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;z-index:10000;opacity:0;transition:all .3s;pointer-events:none;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(40,40,40,.92);color:#fff;padding:10px 22px;border-radius:10px;font-size:var(--font-base);font-weight:500;z-index:10000;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(8px);box-shadow:var(--shadow-lg);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .loading-overlay.active{display:flex;}
-.loading-box{background:#fff;border-radius:16px;padding:28px 40px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2);}
-.loading-spinner{width:40px;height:40px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+.loading-box{background:#fff;border-radius:var(--radius-lg);padding:32px 44px;text-align:center;box-shadow:var(--shadow-lg);}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border-light);border-top:3px solid var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.loading-text{font-size:14px;font-weight:500;}
+.loading-text{font-size:var(--font-md);font-weight:500;color:var(--text);}
 
 /* Guide */
-.guide{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.guide{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
 .guide h3{margin-bottom:8px;}
 .guide-tabs{display:flex;gap:6px;margin-bottom:8px;}
-.guide-tab{padding:5px 12px;border:1px solid var(--border);border-radius:16px;background:transparent;font-family:inherit;font-size:12px;cursor:pointer;}
+.guide-tab{padding:5px 12px;border:1px solid var(--border);border-radius:16px;background:transparent;font-family:inherit;font-size:var(--font-sm);cursor:pointer;transition:var(--transition);}
 .guide-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
-.guide-content{font-size:13px;line-height:1.8;color:#666;}
+.guide-content{font-size:var(--font-base);line-height:1.8;color:var(--text-secondary);}
 .guide-content ol{padding-left:18px;}
 
 @media(max-width:900px){
+  .input-panel{padding:16px;}
   .opt-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   .wear-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));}
   .image-item{width:80px;}.image-item img{height:64px;}.image-add-btn{width:80px;height:90px;}
@@ -175,10 +218,10 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 <!-- Fullscreen Preview -->
 <div class="fullscreen-overlay" id="fullOverlay">
   <button class="fullscreen-close" onclick="closeFull()">✕</button>
-  <div style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:301;display:flex;gap:8px;background:rgba(255,255,255,.95);padding:8px 16px;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.2);backdrop-filter:blur(8px);">
-    <button class="btn btn-primary" style="font-size:12px;padding:7px 14px;" onclick="downloadImages()">📥 이미지 저장</button>
-    <button class="btn btn-primary" style="font-size:12px;padding:7px 14px;" onclick="downloadHTML()">📄 HTML 저장</button>
-    <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="copyHTML()">📋 HTML 복사</button>
+  <div style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:301;display:flex;gap:8px;background:rgba(255,255,255,.95);padding:10px 18px;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.15);backdrop-filter:blur(8px);">
+    <button class="btn btn-primary" style="font-size:12px;padding:7px 16px;" onclick="downloadImages()">📥 이미지 저장</button>
+    <button class="btn btn-primary" style="font-size:12px;padding:7px 16px;" onclick="downloadHTML()">📄 HTML 저장</button>
+    <button class="btn btn-secondary" style="font-size:12px;padding:7px 16px;" onclick="copyHTML()">📋 HTML 복사</button>
   </div>
   <div class="fullscreen-frame" id="fullFrame"></div>
 </div>
@@ -187,7 +230,7 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 <div class="header">
   <div class="header-title"><span>👜</span> 가죽가방 상세페이지 생성기</div>
   <div class="header-actions">
-    <label class="btn btn-secondary" style="padding:7px 12px;font-size:12px;cursor:pointer;">📂 불러오기<input type="file" accept=".json" style="display:none;" onchange="loadProject(this.files)"></label>
+    <label class="btn btn-secondary" style="padding:7px 14px;font-size:12px;cursor:pointer;">📂 불러오기<input type="file" accept=".json" style="display:none;" onchange="loadProject(this.files)"></label>
   </div>
 </div>
 
@@ -197,28 +240,100 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 <!-- ===== LEFT: Input Panel ===== -->
 <div class="input-panel" id="inputPanel">
 
-<div class="api-section">
-  <label>🔑 Gemini API</label>
-  <input type="password" id="apiKey" placeholder="API 키 입력 시 AI 카피 자동 생성">
-  <div class="api-hint">※ 없어도 내장 템플릿으로 동작합니다</div>
-</div>
-
-<!-- Photos -->
-<div class="upload-section">
-  <h2 style="margin-bottom:10px;">📷 사진 업로드 <span style="font-size:13px;font-weight:400;color:#999;">(최대 20장)</span></h2>
-  <div class="upload-zone" id="uploadZone">
-    <div class="upload-zone-icon">📁</div>
-    <div style="font-size:14px;color:#888;">클릭하거나 사진을 드래그하세요</div>
-    <div style="font-size:12px;color:#aaa;margin-top:4px;">용도 태그를 지정하면 해당 구간에 자동 배치됩니다</div>
-  </div>
-  <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
-  <div class="image-grid" id="imageGrid"></div>
-  <div id="tagCounter" style="display:none;margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
-</div>
-
-<!-- B-1 Bag Type -->
-<div class="accordion open"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">👜</span><strong>가방 종류</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="bagType" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- 스타일 설정 (맨 위: 전체 레이아웃에 영향) -->
+<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">⚙️</span><strong>스타일 설정</strong></div><div><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
+<h3 style="margin-bottom:6px;">톤</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-bottom:14px;">
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="beige" checked><span style="font-weight:600;">미니멀 베이지</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#FAF6F1;border:1px solid #ddd;"></span><span style="width:14px;height:14px;border-radius:50%;background:#C9A96E;"></span><span style="width:14px;height:14px;border-radius:50%;background:#3A3A3A;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="white"><span style="font-weight:600;">모던 화이트</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#FFFFFF;border:1px solid #ddd;"></span><span style="width:14px;height:14px;border-radius:50%;background:#888;"></span><span style="width:14px;height:14px;border-radius:50%;background:#222;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="dark"><span style="font-weight:600;">클래식 다크</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#1A1A1A;"></span><span style="width:14px;height:14px;border-radius:50%;background:#D4A574;"></span><span style="width:14px;height:14px;border-radius:50%;background:#F5F5F5;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="craft"><span style="font-weight:600;">내추럴 크라프트</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#F5EDE3;"></span><span style="width:14px;height:14px;border-radius:50%;background:#8B7355;"></span><span style="width:14px;height:14px;border-radius:50%;background:#4A4038;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="rose"><span style="font-weight:600;">로즈 핑크</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#FFF5F5;"></span><span style="width:14px;height:14px;border-radius:50%;background:#C4787A;"></span><span style="width:14px;height:14px;border-radius:50%;background:#4A3A3A;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="olive"><span style="font-weight:600;">올리브 그린</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#F5F5ED;"></span><span style="width:14px;height:14px;border-radius:50%;background:#6B7355;"></span><span style="width:14px;height:14px;border-radius:50%;background:#3A3A32;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="navy"><span style="font-weight:600;">딥 네이비</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#1A1F2E;"></span><span style="width:14px;height:14px;border-radius:50%;background:#A8B4C4;"></span><span style="width:14px;height:14px;border-radius:50%;background:#E8ECF0;"></span></div></label>
+<label class="opt-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;"><div style="display:flex;align-items:center;gap:6px;"><input type="radio" name="theme" value="mono"><span style="font-weight:600;">모노 블랙</span></div><div style="display:flex;gap:3px;"><span style="width:14px;height:14px;border-radius:50%;background:#FFFFFF;border:1px solid #ddd;"></span><span style="width:14px;height:14px;border-radius:50%;background:#333;"></span><span style="width:14px;height:14px;border-radius:50%;background:#000;"></span></div></label>
+</div>
+<h3 style="margin-bottom:6px;">폰트</h3>
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="fontFamily" value="Noto Sans KR" checked> Noto Sans KR</div><span style="font-size:11px;color:var(--text-muted);font-family:'Noto Sans KR';">가죽가방 Aa</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="fontFamily" value="Pretendard"> Pretendard</div><span style="font-size:11px;color:var(--text-muted);font-family:'Pretendard',sans-serif;">가죽가방 Aa</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="fontFamily" value="Noto Serif KR"> Noto Serif KR</div><span style="font-size:11px;color:var(--text-muted);font-family:'Noto Serif KR',serif;">가죽가방 Aa</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="fontFamily" value="Gowun Batang"> 고운바탕</div><span style="font-size:11px;color:var(--text-muted);font-family:'Gowun Batang',serif;">가죽가방 Aa</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="fontFamily" value="IBM Plex Sans KR"> IBM Plex Sans</div><span style="font-size:11px;color:var(--text-muted);font-family:'IBM Plex Sans KR',sans-serif;">가죽가방 Aa</span></label>
+</div>
+<h3 style="margin-bottom:6px;">글자 크기</h3>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+<input type="range" id="fontSizeRange" min="80" max="120" value="100" step="5" style="flex:1;accent-color:var(--primary);" oninput="document.getElementById('fontSizeLabel').textContent=this.value+'%';schedulePreview();">
+<span id="fontSizeLabel" style="font-size:var(--font-sm);font-weight:600;min-width:36px;text-align:center;">100%</span>
+</div>
+<h3 style="margin-bottom:6px;">가로폭</h3>
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="pageWidth" value="860" checked> 860px</div><span style="font-size:11px;color:var(--text-muted);">스마트스토어 · 쿠팡</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="pageWidth" value="780"> 780px</div><span style="font-size:11px;color:var(--text-muted);">카페24 · 고도몰</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="pageWidth" value="750"> 750px</div><span style="font-size:11px;color:var(--text-muted);">11번가 · G마켓</span></label>
+<label class="opt-item" style="justify-content:space-between;"><div style="display:flex;align-items:center;gap:7px;"><input type="radio" name="pageWidth" value="720"> 720px</div><span style="font-size:11px;color:var(--text-muted);">아이디어스</span></label>
+</div>
+<h3 style="margin-bottom:6px;">포함 구간</h3>
+<div class="opt-grid">
+<label class="opt-item"><input type="checkbox" name="sections" value="brandStory" checked> 브랜드 스토리</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="story" checked> 감성 스토리</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="gallery" checked> 사진 갤러리</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="leather" checked> 소재 설명</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="wearing" checked> 착용 방식</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="size" checked> 사이즈</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="interior" checked> 내부 구조</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="target" checked> 추천 대상</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="craftsmanship" checked> 제작 방식</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="spec" checked> 스펙 정리</label>
+<label class="opt-item"><input type="checkbox" name="sections" value="shipping" checked> 배송 안내</label>
+<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-light);">
+<span id="styleSaveStatus" style="font-size:11px;color:var(--text-muted);"></span>
+<button type="button" class="btn btn-primary" style="padding:6px 20px;font-size:12px;" onclick="saveStyleSettings()">💾 스타일 저장</button>
+</div>
+</div></div></div>
+
+<!-- ━━━ 브랜드 스토리 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:16px 0 6px 2px;">BRAND STORY</div>
+
+<div class="accordion" data-target="brand"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🏷️</span><strong>브랜드 스토리</strong></div><div><span class="acc-arrow">▼</span></div></div>
+<div class="acc-body"><div class="acc-content">
+<div class="inp-group"><label>브랜드/공방명</label><input type="text" id="brandName" placeholder="예: 르가죽공방" oninput="schedulePreview()"></div>
+<div class="inp-group"><label>브랜드 한줄 소개</label><input type="text" id="brandTagline" placeholder="예: 손으로 만드는 가치, 매일 쓰는 가죽가방" oninput="schedulePreview()"></div>
+<div class="inp-group"><label>브랜드 로고 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">(선택)</span></label>
+<div id="brandLogoPreview" style="display:none;margin-bottom:8px;position:relative;display:inline-block;">
+<img id="brandLogoImg" style="max-width:160px;max-height:80px;border-radius:6px;border:1px solid var(--border-light);display:block;">
+<button type="button" onclick="removeBrandLogo()" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;">×</button>
+</div>
+<label class="load-label" id="brandLogoLabel" style="cursor:pointer;"><span>📷</span> 로고 선택<input type="file" accept="image/*" style="display:none;" onchange="handleBrandLogo(this.files)"></label>
+</div>
+<div class="inp-group"><label>브랜드 소개글</label><textarea id="brandStory" placeholder="브랜드의 철학, 시작 이야기, 작가 소개 등을 작성해주세요.&#10;&#10;예시:&#10;르가죽공방은 2018년, 작은 작업실에서 시작되었습니다.&#10;좋은 소재와 정직한 손길로 오래 쓸 수 있는 가방을 만듭니다." oninput="schedulePreview()" style="min-height:100px;"></textarea></div>
+<div class="inp-group"><label>대표 이미지 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">(선택)</span></label>
+<div id="brandHeroPreview" style="display:none;margin-bottom:8px;position:relative;display:inline-block;">
+<img id="brandHeroImg" style="max-width:280px;max-height:160px;border-radius:8px;border:1px solid var(--border-light);display:block;">
+<button type="button" onclick="removeBrandHero()" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;">×</button>
+</div>
+<label class="load-label" id="brandHeroLabel" style="cursor:pointer;"><span>📷</span> 이미지 선택<input type="file" accept="image/*" style="display:none;" onchange="handleBrandHero(this.files)"></label>
+<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-light);">
+<span id="brandSaveStatus" style="font-size:11px;color:var(--text-muted);"></span>
+<button type="button" class="btn btn-primary" style="padding:6px 20px;font-size:12px;" onclick="saveBrandStory()">💾 브랜드 저장</button>
+</div>
+</div>
+</div></div></div>
+
+<!-- ━━━ 히어로 영역 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:16px 0 6px 2px;">HERO</div>
+
+<!-- 1. 제품 기본 정보 → 히어로 -->
+<div class="accordion open" data-target="hero"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">✏️</span><strong>제품 기본 정보</strong></div><div><span class="acc-arrow">▼</span></div></div>
+<div class="acc-body"><div class="acc-content">
+<div class="inp-group"><label>제품명 <span class="req">*</span></label><input type="text" id="productName" placeholder="예: 클래식 숄더 레더백" oninput="schedulePreview()"></div>
+<div class="inp-group" style="margin-top:14px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><label style="margin-bottom:0;">스토리 문구</label></div><textarea id="storyText" placeholder="제품에 어울리는 감성 스토리를 직접 작성해주세요.&#10;&#10;예시:&#10;어떤 가방을 들고 있느냐가&#10;그 사람의 하루를 말해줍니다.&#10;&#10;좋아하는 것들로 채워진 하루,&#10;그 시작은 가방을 고르는 순간부터." style="min-height:120px;"></textarea>
+<div style="display:flex;justify-content:flex-end;gap:6px;margin-top:6px;">
+<span id="storyStatus" style="font-size:11px;color:var(--text-muted);align-self:center;"></span>
+<button type="button" class="btn btn-primary" style="padding:6px 20px;font-size:12px;" onclick="applyStory()">적용</button>
+</div></div>
+<div class="inp-group"><label>가방 종류</label>
 <div class="opt-grid">
 <label class="opt-item"><input type="checkbox" name="bagType" value="숄더백"> 숄더백</label>
 <label class="opt-item"><input type="checkbox" name="bagType" value="토트백"> 토트백</label>
@@ -231,10 +346,27 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 <label class="opt-item"><input type="checkbox" name="bagType" value="파우치"> 파우치</label>
 </div>
 <div class="custom-row"><input type="checkbox" name="bagType" value="custom" id="bagTypeCustomCheck"><span>기타:</span><input type="text" id="bagTypeCustom" placeholder="직접 입력" onfocus="document.getElementById('bagTypeCustomCheck').checked=true;updateUI();"></div>
+</div>
 </div></div></div>
 
-<!-- B-2 Leather -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🧶</span><strong>가죽 소재</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="leather" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- 2. 사진 업로드 → 히어로 메인컷 + 갤러리 -->
+<div class="upload-section" data-target="gallery">
+  <h2 style="margin-bottom:12px;">📷 사진 업로드 <span style="font-size:12px;font-weight:400;color:var(--text-muted);">(최대 20장)</span></h2>
+  <div class="upload-zone" id="uploadZone">
+    <div class="upload-zone-icon">📁</div>
+    <div style="font-size:13px;color:var(--text-secondary);">클릭하거나 사진을 드래그하세요</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">용도 태그를 지정하면 해당 구간에 자동 배치됩니다</div>
+  </div>
+  <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+  <div class="image-grid" id="imageGrid"></div>
+  <div id="tagCounter" style="display:none;margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+</div>
+
+<!-- ━━━ 소재 설명 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">③ MATERIAL</div>
+
+<!-- 4. 가죽 소재 -->
+<div class="accordion" data-target="leather"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🧶</span><strong>가죽 소재</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="leather" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="opt-grid">
 <label class="opt-item"><input type="checkbox" name="leather" value="소가죽"> 소가죽</label>
@@ -249,28 +381,34 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 <div class="custom-row"><input type="checkbox" name="leather" value="custom" id="leatherCustomCheck"><span>기타:</span><input type="text" id="leatherCustom" placeholder="직접 입력" onfocus="document.getElementById('leatherCustomCheck').checked=true;updateUI();"></div>
 </div></div></div>
 
-<!-- B-3 Colors -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🎨</span><strong>색상</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="colors" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- 5. 색상 (컬러 카드) -->
+<div class="accordion" data-target="colors"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🎨</span><strong>색상</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="colors" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
-<div class="opt-grid">
-<label class="opt-item"><input type="checkbox" name="colors" value="블랙"> 블랙</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="카멜"> 카멜</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="에토프"> 에토프</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="브라운"> 브라운</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="탄"> 탄</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="버건디"> 버건디</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="네이비"> 네이비</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="아이보리"> 아이보리</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="베이지"> 베이지</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="그레이"> 그레이</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="카키"> 카키</label>
-<label class="opt-item"><input type="checkbox" name="colors" value="화이트"> 화이트</label>
+<div class="color-grid">
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="블랙"><div class="color-swatch" style="background:#222;"></div><div class="color-card-label">블랙</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="카멜"><div class="color-swatch" style="background:#C4956A;"></div><div class="color-card-label">카멜</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="에토프"><div class="color-swatch" style="background:#8B7D6B;"></div><div class="color-card-label">에토프</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="브라운"><div class="color-swatch" style="background:#6B4226;"></div><div class="color-card-label">브라운</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="탄"><div class="color-swatch" style="background:#D2A168;"></div><div class="color-card-label">탄</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="버건디"><div class="color-swatch" style="background:#722F37;"></div><div class="color-card-label">버건디</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="네이비"><div class="color-swatch" style="background:#1B2A4A;"></div><div class="color-card-label">네이비</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="아이보리"><div class="color-swatch" style="background:#FFFFF0;border-color:rgba(0,0,0,.12);"></div><div class="color-card-label">아이보리</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="베이지"><div class="color-swatch" style="background:#D4C5A9;"></div><div class="color-card-label">베이지</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="그레이"><div class="color-swatch" style="background:#909090;"></div><div class="color-card-label">그레이</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="카키"><div class="color-swatch" style="background:#5F6B4E;"></div><div class="color-card-label">카키</div></div>
+<div class="color-card" onclick="togColor(this)"><input type="checkbox" name="colors" value="화이트"><div class="color-swatch" style="background:#FFFFFF;border-color:rgba(0,0,0,.12);"></div><div class="color-card-label">화이트</div></div>
 </div>
-<div class="custom-row"><input type="checkbox" name="colors" value="custom" id="colorsCustomCheck"><span>기타:</span><input type="text" id="colorsCustom" placeholder="직접 입력" onfocus="document.getElementById('colorsCustomCheck').checked=true;updateUI();"></div>
+<div id="customColorCards" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+<div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+<button type="button" class="btn btn-secondary" style="padding:6px 14px;font-size:12px;" onclick="addCustomColor()">+ 색상 추가</button>
+</div>
 </div></div></div>
 
-<!-- B-4 Wearing Style -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">💁</span><strong>착용 방식</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="wearStyle" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- ━━━ 착용 방식 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">④ STYLE</div>
+
+<!-- 6. 착용 방식 -->
+<div class="accordion" data-target="wearing"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">💁</span><strong>착용 방식</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="wearStyle" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="wear-grid">
 <div class="wear-card" onclick="togWear(this)"><input type="checkbox" name="wearStyle" value="숄더"><div class="wear-card-label">숄더</div></div>
@@ -283,8 +421,32 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 </div>
 </div></div></div>
 
-<!-- B-5 Interior -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🗂️</span><strong>내부 구조</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="interior" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- ━━━ 사이즈 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">⑤ SIZE</div>
+
+<!-- 7. 사이즈/규격 -->
+<div class="accordion" data-target="size"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">📐</span><strong>사이즈 / 규격</strong></div><div><span class="acc-arrow">▼</span></div></div>
+<div class="acc-body"><div class="acc-content">
+<div class="inp-group"><label>사이즈</label>
+<div class="opt-grid" style="margin-bottom:6px;">
+<label class="opt-item"><input type="radio" name="sizeType" value="single" checked onchange="togSizeUI();schedulePreview();"> 단일</label>
+<label class="opt-item"><input type="radio" name="sizeType" value="multi" onchange="togSizeUI();schedulePreview();"> 복수</label>
+<label class="opt-item"><input type="radio" name="sizeType" value="none" onchange="togSizeUI();schedulePreview();"> 없음</label>
+</div>
+<div id="singleSizeArea" class="size-option-area"><div class="size-row"><span>옵션명</span><input type="text" class="sz-name" id="singleName" placeholder="예: FREE, M" oninput="schedulePreview()" style="width:80px;"><span style="margin-left:6px;">가로</span><input type="text" class="sz-dim" id="singleW" placeholder="cm" oninput="schedulePreview()"><span>×</span><span>세로</span><input type="text" class="sz-dim" id="singleH" placeholder="cm" oninput="schedulePreview()"><span>×</span><span>폭</span><input type="text" class="sz-dim" id="singleD" placeholder="cm" oninput="schedulePreview()"><span style="margin-left:6px;">핸들</span><input type="text" class="sz-dim" id="singleHH" placeholder="cm" oninput="schedulePreview()"></div></div>
+<div id="multiSizeArea" class="size-option-area" style="display:none;"><div id="sizeRows" style="display:flex;gap:10px;flex-wrap:wrap;"></div><button type="button" class="add-sz-btn" style="margin-top:8px;" onclick="addSzRow()">+ 옵션 추가</button></div>
+</div>
+<div class="inp-row">
+<div class="inp-group"><label>무게</label><div style="display:flex;align-items:center;gap:4px;"><input type="text" id="weight" placeholder="480" style="flex:1;" oninput="schedulePreview()"><span style="font-size:13px;">g</span></div></div>
+<div class="inp-group"><label>스트랩 길이</label><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">최소</span><input type="text" id="strapMin" placeholder="cm" style="width:70px;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:13px;" oninput="schedulePreview()"><span>~</span><span style="font-size:12px;">최대</span><input type="text" id="strapMax" placeholder="cm" style="width:70px;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:13px;" oninput="schedulePreview()"></div></div>
+</div>
+</div></div></div>
+
+<!-- ━━━ 내부 구조 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">⑥ INTERIOR</div>
+
+<!-- 8. 내부 구조 -->
+<div class="accordion" data-target="interior"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🗂️</span><strong>내부 구조</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="interior" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="opt-grid">
 <label class="pocket-opt"><input type="checkbox" name="interior" value="내부 지퍼 포켓"> 지퍼 포켓 <select class="pc" data-for="내부 지퍼 포켓"><option>1</option><option>2</option><option>3</option></select>개</label>
@@ -299,17 +461,11 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 </div>
 </div></div></div>
 
-<!-- B-6 Production -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🔨</span><strong>제작 방식</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="production" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
-<div class="acc-body"><div class="acc-content">
-<div class="opt-grid">
-<label class="opt-item"><input type="radio" name="production" value="공방 제작"> 공방 제작</label>
-<label class="opt-item"><input type="radio" name="production" value="공장 제작 + 자체 검수/마감"> 공장 제작 + 자체 검수</label>
-</div>
-</div></div></div>
+<!-- ━━━ 추천 대상 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">⑦ FOR YOU</div>
 
-<!-- B-7 Target Age -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">👤</span><strong>타겟 연령대</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="targetAge" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- 7. 타겟 연령대 -->
+<div class="accordion" data-target="target"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">👤</span><strong>타겟 연령대</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="targetAge" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="opt-grid">
 <label class="opt-item"><input type="checkbox" name="targetAge" value="20대"> 20대</label>
@@ -321,8 +477,8 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 </div>
 </div></div></div>
 
-<!-- B-8 Recommend -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">💡</span><strong>추천 상황</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="recommend" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
+<!-- 8. 추천 상황 -->
+<div class="accordion" data-target="target"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">💡</span><strong>추천 상황</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="recommend" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="opt-grid">
 <label class="opt-item"><input type="checkbox" name="recommend" value="출퇴근용"> 출퇴근용</label>
@@ -336,34 +492,24 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 </div>
 </div></div></div>
 
-<!-- C Direct Input -->
-<div class="accordion open"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">✏️</span><strong>제품 상세 정보</strong></div><div><span class="acc-arrow">▼</span></div></div>
+<!-- ━━━ 제작 방식 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">⑧ CRAFTSMANSHIP</div>
+
+<!-- 9. 제작 방식 -->
+<div class="accordion" data-target="craftsmanship"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🔨</span><strong>제작 방식</strong></div><div style="display:flex;align-items:center;gap:6px;"><span class="badge" data-badge="production" style="display:none">0</span><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
-<div class="inp-group"><label>제품명 <span class="req">*</span></label><input type="text" id="productName" placeholder="예: 클래식 숄더 레더백" oninput="schedulePreview()"></div>
-<div class="inp-row">
-<div class="inp-group"><label>무게</label><div style="display:flex;align-items:center;gap:4px;"><input type="text" id="weight" placeholder="480" style="flex:1;" oninput="schedulePreview()"><span style="font-size:13px;">g</span></div></div>
-<div class="inp-group"><label>브랜드/공방명</label><input type="text" id="brandName" placeholder="예: 르가죽공방" oninput="schedulePreview()"></div>
+<div class="opt-grid" style="margin-bottom:10px;">
+<label class="opt-item"><input type="radio" name="production" value="공방 제작"> 공방 제작</label>
+<label class="opt-item"><input type="radio" name="production" value="공장 제작 + 자체 검수/마감"> 공장 제작 + 자체 검수</label>
 </div>
-<div class="inp-group" style="margin-top:12px;"><label>사이즈</label>
-<div class="opt-grid" style="margin-bottom:6px;">
-<label class="opt-item"><input type="radio" name="sizeType" value="single" checked onchange="togSizeUI();schedulePreview();"> 단일</label>
-<label class="opt-item"><input type="radio" name="sizeType" value="multi" onchange="togSizeUI();schedulePreview();"> 복수</label>
-<label class="opt-item"><input type="radio" name="sizeType" value="none" onchange="togSizeUI();schedulePreview();"> 없음</label>
-</div>
-<div id="singleSizeArea" class="size-option-area"><div class="size-row"><span>옵션명</span><input type="text" class="sz-name" id="singleName" placeholder="예: FREE, M" oninput="schedulePreview()" style="width:80px;"><span style="margin-left:6px;">가로</span><input type="text" class="sz-dim" id="singleW" placeholder="cm" oninput="schedulePreview()"><span>×</span><span>세로</span><input type="text" class="sz-dim" id="singleH" placeholder="cm" oninput="schedulePreview()"><span>×</span><span>폭</span><input type="text" class="sz-dim" id="singleD" placeholder="cm" oninput="schedulePreview()"><span style="margin-left:6px;">핸들</span><input type="text" class="sz-dim" id="singleHH" placeholder="cm" oninput="schedulePreview()"></div></div>
-<div id="multiSizeArea" class="size-option-area" style="display:none;"><div id="sizeRows" style="display:flex;gap:10px;flex-wrap:wrap;"></div><button type="button" class="add-sz-btn" style="margin-top:8px;" onclick="addSzRow()">+ 옵션 추가</button></div>
-</div>
-<div class="inp-group"><label>스트랩 길이</label><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">최소</span><input type="text" id="strapMin" placeholder="cm" style="width:70px;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:13px;" oninput="schedulePreview()"><span>~</span><span style="font-size:12px;">최대</span><input type="text" id="strapMax" placeholder="cm" style="width:70px;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:13px;" oninput="schedulePreview()"></div></div>
-<div class="inp-group"><label>한줄 소개</label><input type="text" id="tagline" placeholder="예: 매일 들어도 질리지 않는 가죽가방" oninput="schedulePreview()"></div>
-<div class="inp-group" style="margin-top:12px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;"><label style="margin-bottom:0;">스토리 문구</label><div style="display:flex;gap:4px;"><button type="button" class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="regenerateStory()">🔄 새로 생성</button></div></div><textarea id="storyText" placeholder="여기에 감성 키워드나 원하는 문구를 입력한 뒤 '새로 생성'을 누르세요.&#10;입력한 내용을 기반으로 매번 새로운 감성 스토리가 만들어집니다.&#10;&#10;예시: 엄마에게 드리는 첫 번째 가죽가방&#10;예시: 비 오는 날에도 걱정 없는 데일리백" oninput="schedulePreview()" style="min-height:120px;"></textarea>
-<div id="storyKeywordIndicator" style="display:none;margin-top:6px;padding:8px 12px;background:rgba(201,169,110,.1);border:1px solid var(--border);border-radius:6px;font-size:12px;">
-<div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:var(--accent);">📌 원본 키워드: <strong id="storyKeywordText"></strong></span><button type="button" style="background:none;border:none;cursor:pointer;font-size:14px;color:#999;padding:0 2px;" onclick="clearStoryKeyword()" title="키워드 초기화">✕</button></div>
-<div style="font-size:11px;color:#999;margin-top:2px;">'새로 생성'을 누를 때마다 이 키워드를 기반으로 새로운 스토리를 만듭니다</div>
-</div></div>
+<div class="inp-group"><label>제작 상세 설명</label><textarea id="productionDetail" placeholder="예: 20년 경력 장인이 하나하나 수작업으로 완성합니다.&#10;이탈리아 직수입 실로 꼼꼼하게 마감합니다." oninput="schedulePreview()" style="min-height:80px;"></textarea></div>
 </div></div></div>
 
-<!-- Shipping -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">📦</span><strong>배송/교환/반품</strong></div><div><span class="acc-arrow">▼</span></div></div>
+<!-- ━━━ 배송 안내 ━━━ -->
+<div style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:1px;padding:12px 0 6px 2px;">⑪ SHIPPING</div>
+
+<!-- 12. 배송/교환/반품 -->
+<div class="accordion" data-target="shipping"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">📦</span><strong>배송/교환/반품</strong></div><div><span class="acc-arrow">▼</span></div></div>
 <div class="acc-body"><div class="acc-content">
 <div class="inp-group"><textarea id="shippingText" oninput="schedulePreview()">배송 안내
 ─────────
@@ -377,63 +523,54 @@ h2{font-size:20px;font-weight:600;}h3{font-size:16px;font-weight:600;}
 · 주문 제작 상품은 교환/반품 불가</textarea></div>
 </div></div></div>
 
-<!-- Style -->
-<div class="accordion"><div class="acc-hd" onclick="togAcc(this)"><div class="acc-hd-left"><span class="icon">🎨</span><strong>스타일 설정</strong></div><div><span class="acc-arrow">▼</span></div></div>
-<div class="acc-body"><div class="acc-content">
-<h3 style="margin-bottom:6px;">톤</h3>
-<div class="opt-grid" style="margin-bottom:14px;">
-<label class="opt-item"><input type="radio" name="theme" value="beige" checked> 미니멀 베이지</label>
-<label class="opt-item"><input type="radio" name="theme" value="white"> 모던 화이트</label>
-<label class="opt-item"><input type="radio" name="theme" value="dark"> 클래식 다크</label>
-<label class="opt-item"><input type="radio" name="theme" value="craft"> 내추럴 크라프트</label>
-</div>
-<h3 style="margin-bottom:6px;">가로폭</h3>
-<div class="opt-grid" style="margin-bottom:14px;">
-<label class="opt-item"><input type="radio" name="pageWidth" value="860" checked> 860px</label>
-<label class="opt-item"><input type="radio" name="pageWidth" value="750"> 750px</label>
-<label class="opt-item"><input type="radio" name="pageWidth" value="780"> 780px</label>
-</div>
-<h3 style="margin-bottom:6px;">포함 구간</h3>
-<div class="opt-grid">
-<label class="opt-item"><input type="checkbox" name="sections" value="story" checked> 감성 스토리</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="gallery" checked> 사진 갤러리</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="leather" checked> 소재 설명</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="wearing" checked> 착용 방식</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="size" checked> 사이즈</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="interior" checked> 내부 구조</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="advantages" checked> 제품 장점</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="target" checked> 추천 대상</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="spec" checked> 스펙 정리</label>
-<label class="opt-item"><input type="checkbox" name="sections" value="shipping" checked> 배송 안내</label>
-</div>
-</div></div></div>
-
 <!-- Generate -->
-<div style="text-align:center;padding:20px 0;">
-  <button class="btn btn-primary" style="font-size:16px;padding:14px 40px;border-radius:12px;" onclick="generateFull()">✨ 상세페이지 생성 (AI 카피)</button>
-  <div style="font-size:12px;color:#999;margin-top:6px;">Gemini API 없이도 미리보기는 실시간으로 반영됩니다</div>
+<div style="text-align:center;padding:24px 0;">
+  <button class="btn btn-primary" style="font-size:15px;padding:14px 44px;border-radius:10px;letter-spacing:-.2px;" onclick="generateFull()">✨ 상세페이지 생성</button>
 </div>
 
 <!-- Save/Load -->
 <div class="save-load">
   <h3>💾 저장 / 불러오기</h3>
-  <p style="font-size:12px;color:#888;margin-bottom:8px;">입력한 모든 내용(사진 포함)을 저장하고 다음에 다시 사용할 수 있습니다.</p>
+  <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">입력한 모든 내용(사진 포함)을 저장하고 다음에 다시 사용할 수 있습니다.</p>
   <div class="sl-row">
     <input type="text" id="saveFileName" placeholder="파일 이름 (예: 클래식숄더백)">
     <button class="btn btn-primary" onclick="saveProject()">💾 저장</button>
   </div>
   <div class="sl-row">
     <label class="load-label">📂 불러오기<input type="file" accept=".json" style="display:none;" onchange="loadProject(this.files)"></label>
-    <span style="font-size:11px;color:#999;">다운로드 폴더의 .json 파일 선택</span>
+    <span style="font-size:11px;color:var(--text-muted);">다운로드 폴더의 .json 파일 선택</span>
   </div>
 </div>
 
 </div><!-- /input-panel -->
 
+<!-- ===== RIGHT: Live Preview Panel ===== -->
+<div class="preview-panel" id="previewPanel">
+  <div class="preview-header">
+    <div class="preview-header-title">👁️ 실시간 미리보기</div>
+    <div class="preview-header-actions">
+      <div class="preview-zoom">
+        <button onclick="changeZoom(-10)">−</button>
+        <span id="zoomLabel">40%</span>
+        <button onclick="changeZoom(10)">+</button>
+      </div>
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:11px;" onclick="openFull()">🔍 전체화면</button>
+    </div>
+  </div>
+  <div class="preview-body" id="previewBody">
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">👜</div>
+      <div class="preview-empty-text">왼쪽에서 정보를 입력하면<br>여기에 실시간으로 반영됩니다</div>
+      <div class="preview-empty-hint">제품명과 사진을 먼저 추가해보세요</div>
+    </div>
+    <div class="preview-frame" id="previewFrame" style="display:none;"></div>
+  </div>
+</div>
+
 </div><!-- /split-layout -->
 
 <script>
-var state={images:[],generatedHTML:'',originalStoryKeywords:''};
+var state={images:[],generatedHTML:'',appliedStory:'',brandLogoData:'',brandHeroData:''};
 var dragSrcIndex=null;
 var previewTimer=null;
 
@@ -474,8 +611,77 @@ var recMap={
 var wearSVGs={};
 
 /* ===== Accordion / Wear ===== */
-function togAcc(hd){hd.closest('.accordion').classList.toggle('open');}
+function togAcc(hd){
+  var acc=hd.closest('.accordion');
+  acc.classList.toggle('open');
+  var target=acc.getAttribute('data-target');
+  if(target&&acc.classList.contains('open'))highlightPreviewSection(target);
+}
+var highlightTimer=null;
+function highlightPreviewSection(sectionId){
+  var frame=document.getElementById('previewFrame');
+  if(!frame||frame.style.display==='none')return;
+  // 기존 하이라이트 제거
+  frame.querySelectorAll('[data-section]').forEach(function(el){el.style.outline='';el.style.outlineOffset='';});
+  // 해당 섹션 하이라이트
+  var el=frame.querySelector('[data-section="'+sectionId+'"]');
+  if(!el)return;
+  el.style.outline='2px dashed #C9A96E';
+  el.style.outlineOffset='-2px';
+  // 미리보기 스크롤
+  var body=document.getElementById('previewBody');
+  var scale=previewZoom/100;
+  var elTop=el.offsetTop*scale;
+  body.scrollTop=Math.max(0,elTop-60);
+  // 일정시간 후 자동 제거
+  clearTimeout(highlightTimer);
+  highlightTimer=setTimeout(function(){
+    el.style.outline='';el.style.outlineOffset='';
+  },3000);
+}
 function togWear(c){var cb=c.querySelector('input');cb.checked=!cb.checked;c.classList.toggle('selected',cb.checked);updateUI();}
+function togColor(c){var cb=c.querySelector('input');cb.checked=!cb.checked;c.classList.toggle('selected',cb.checked);updateUI();}
+
+/* Custom Colors */
+var customColors=[];
+function addCustomColor(){
+  var id='cc_'+Date.now();
+  customColors.push({id:id,hex:'#C9A96E',name:''});
+  renderCustomColors();
+  schedulePreview();
+}
+function removeCustomColor(id){
+  customColors=customColors.filter(function(c){return c.id!==id;});
+  renderCustomColors();
+  schedulePreview();
+}
+function renderCustomColors(){
+  var wrap=document.getElementById('customColorCards');
+  wrap.innerHTML='';
+  customColors.forEach(function(cc){
+    var d=document.createElement('div');
+    d.className='custom-color-item';
+    d.innerHTML='<button type="button" class="custom-color-remove" onclick="removeCustomColor(\''+cc.id+'\')">&times;</button>'+
+      '<div class="color-swatch" style="background:'+cc.hex+';position:relative;">'+
+      '<input type="color" value="'+cc.hex+'" onchange="updateCustomColor(\''+cc.id+'\',this.value)" oninput="updateCustomColorPreview(\''+cc.id+'\',this.value)">'+
+      '</div>'+
+      '<input type="text" class="custom-color-name" value="'+cc.name+'" placeholder="색상명" oninput="updateCustomColorName(\''+cc.id+'\',this.value)">';
+    wrap.appendChild(d);
+  });
+}
+function updateCustomColor(id,hex){
+  customColors.forEach(function(c){if(c.id===id)c.hex=hex;});
+  renderCustomColors();schedulePreview();
+}
+function updateCustomColorPreview(id,hex){
+  customColors.forEach(function(c){if(c.id===id)c.hex=hex;});
+  var item=document.querySelector('.custom-color-item input[type="color"][onchange*="'+id+'"]');
+  if(item)item.closest('.custom-color-item').querySelector('.color-swatch').style.background=hex;
+}
+function updateCustomColorName(id,name){
+  customColors.forEach(function(c){if(c.id===id)c.name=name;});
+  schedulePreview();
+}
 function updateUI(){
   ['bagType','leather','colors','wearStyle','interior','production','targetAge','recommend'].forEach(function(n){
     var cnt=document.querySelectorAll('input[name="'+n+'"]:checked').length;
@@ -483,6 +689,7 @@ function updateUI(){
     if(b){if(cnt>0){b.textContent=cnt;b.style.display='inline-flex';}else b.style.display='none';}
   });
   document.querySelectorAll('.opt-item').forEach(function(i){var inp=i.querySelector('input');if(inp)i.classList.toggle('selected',inp.checked);});
+  document.querySelectorAll('.color-card').forEach(function(i){var inp=i.querySelector('input');if(inp)i.classList.toggle('selected',inp.checked);});
   schedulePreview();
 }
 document.addEventListener('change',function(e){if(e.target.matches('input[type="radio"],input[type="checkbox"]'))updateUI();});
@@ -519,7 +726,7 @@ function handleFiles(files){
   imgs.forEach(function(file){
     var r=new FileReader();
     r.onload=function(e){
-      state.images.push({id:Date.now()+'_'+Math.random().toString(36).substr(2,5),file:file,dataUrl:e.target.result,tag:state.images.length===0?'메인컷':'기타'});
+      state.images.push({id:Date.now()+'_'+Math.random().toString(36).substr(2,5),file:file,dataUrl:e.target.result,tag:state.images.length===0?'메인컷':'포유컷'});
       loaded++;if(loaded===imgs.length){renderImages();schedulePreview();}
     };r.readAsDataURL(file);
   });
@@ -528,7 +735,7 @@ function renderImages(){
   ig.innerHTML='';
   state.images.forEach(function(img,idx){
     var d=document.createElement('div');d.className='image-item';d.draggable=true;
-    var tags=['메인컷','정면컷','내부컷','착용컷','디테일컷','소재컷','사이즈컷','기타'];
+    var tags=['메인컷','정면컷','착용컷','소재컷','사이즈컷','내부컷','디테일컷','포유컷'];
     var opts=tags.map(function(t){return '<option'+(img.tag===t?' selected':'')+'>'+t+'</option>';}).join('');
     d.innerHTML=(idx===0?'<div class="image-item-badge">메인</div>':'')+
       '<img src="'+img.dataUrl+'" alt="'+img.tag+'">'+
@@ -549,7 +756,7 @@ function updateTagCounter(){
   var tc=document.getElementById('tagCounter');
   if(!state.images.length){tc.style.display='none';return;}
   tc.style.display='flex';
-  var tags=['메인컷','정면컷','착용컷','내부컷','소재컷','사이즈컷','디테일컷','기타'];
+  var tags=['메인컷','정면컷','착용컷','소재컷','사이즈컷','내부컷','디테일컷','포유컷'];
   var counts={};tags.forEach(function(t){counts[t]=0;});
   state.images.forEach(function(i){counts[i.tag]=(counts[i.tag]||0)+1;});
   tc.innerHTML=tags.map(function(t){var c=counts[t]||0;var bg=c>0?'#C9A96E':'#ddd';var tx=c>0?'#fff':'#999';return '<span style="padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;background:'+bg+';color:'+tx+';">'+t+' '+c+'</span>';}).join('');
@@ -571,7 +778,7 @@ function gSz(){
   return{type:'multi',sizes:all};
 }
 function collect(){
-  return{bagType:gC('bagType'),leather:gC('leather'),colors:gC('colors'),wearStyle:gC('wearStyle'),interior:gInt(),production:gR('production'),targetAge:gC('targetAge'),recommend:gC('recommend'),productName:document.getElementById('productName').value.trim(),weight:document.getElementById('weight').value.trim(),brandName:document.getElementById('brandName').value.trim(),tagline:document.getElementById('tagline').value.trim(),storyText:document.getElementById('storyText').value.trim(),strapMin:document.getElementById('strapMin').value.trim(),strapMax:document.getElementById('strapMax').value.trim(),sizes:gSz(),shippingText:document.getElementById('shippingText').value,theme:gR('theme')||'beige',pageWidth:parseInt(gR('pageWidth')||'860'),sections:gC('sections'),images:state.images};
+  return{bagType:gC('bagType'),leather:gC('leather'),colors:gC('colors'),wearStyle:gC('wearStyle'),interior:gInt(),production:gR('production'),productionDetail:document.getElementById('productionDetail').value.trim(),targetAge:gC('targetAge'),recommend:gC('recommend'),productName:document.getElementById('productName').value.trim(),weight:document.getElementById('weight').value.trim(),brandName:document.getElementById('brandName').value.trim(),brandTagline:document.getElementById('brandTagline').value.trim(),brandStory:document.getElementById('brandStory').value.trim(),brandLogoData:state.brandLogoData||'',brandHeroData:state.brandHeroData||'',storyText:document.getElementById('storyText').value.trim(),strapMin:document.getElementById('strapMin').value.trim(),strapMax:document.getElementById('strapMax').value.trim(),sizes:gSz(),shippingText:document.getElementById('shippingText').value,theme:gR('theme')||'beige',pageWidth:parseInt(gR('pageWidth')||'860'),fontFamily:gR('fontFamily')||'Noto Sans KR',fontScale:parseInt(document.getElementById('fontSizeRange').value)||100,sections:gC('sections'),customColors:customColors.slice(),images:state.images};
 }
 
 /* ===== Image by Tag Helpers ===== */
@@ -580,63 +787,87 @@ function imgsByTag(tag){return state.images.filter(function(i){return i.tag===ta
 function randomImgs(n){var a=state.images.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a.slice(0,n);}
 
 /* ===== Live Preview ===== */
-function schedulePreview(){}
+var previewZoom=40;
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(renderPreview,300);
+}
+function renderPreview(){
+  var d=collect();
+  var frame=document.getElementById('previewFrame');
+  var empty=document.getElementById('previewEmpty');
+  var hasContent=d.productName||state.images.length>0;
+  if(!hasContent){frame.style.display='none';empty.style.display='flex';return;}
+  empty.style.display='none';frame.style.display='block';
+  frame.style.width=d.pageWidth+'px';
+  frame.style.zoom=(previewZoom/100);
+  frame.innerHTML=buildHTML(d);
+}
+function changeZoom(delta){
+  previewZoom=Math.max(20,Math.min(100,previewZoom+delta));
+  document.getElementById('zoomLabel').textContent=previewZoom+'%';
+  var frame=document.getElementById('previewFrame');
+  if(frame.style.display!=='none')frame.style.zoom=(previewZoom/100);
+}
 
 /* ===== Full Generate (with AI) ===== */
 function generateFull(){
   var d=collect();
   if(!d.productName){showToast('제품명을 입력해주세요.');return;}
   if(state.images.length===0){showToast('사진을 최소 1장 업로드해주세요.');return;}
-  var apiKey=document.getElementById('apiKey').value.trim();
-  if(!apiKey){state.generatedHTML=buildHTML(d,null);openFull();return;}
-  showLoading(true,'Gemini AI 카피 생성 중...');
-  var prompt='가죽가방 상세페이지 카피라이터로서 아래 정보를 바탕으로 감성적 카피를 작성하세요. 이모티콘 금지.\n제품: '+d.productName+', 종류: '+d.bagType.join(',')+', 소재: '+d.leather.join(',')+', 색상: '+d.colors.join(',')+', 착용: '+d.wearStyle.join(',')+', 제작: '+d.production+', 추천: '+d.recommend.join(',')+
-  '\nJSON만 응답:\n{"storyTitle":"제목1줄","storyBody":"본문3~5줄(\\n)","advantagesText":"장점스토리3~5줄(\\n)","recommendText":"추천스토리3~5줄(\\n)"}';
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7,maxOutputTokens:2048}})
-  }).then(function(r){return r.json();}).then(function(j){
-    showLoading(false);
-    var txt=(j.candidates&&j.candidates[0]&&j.candidates[0].content.parts[0].text)||null;
-    var ai=null;
-    if(txt){try{ai=JSON.parse(txt.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim());}catch(e){}}
-    state.generatedHTML=buildHTML(d,ai);openFull();
-  }).catch(function(){showLoading(false);state.generatedHTML=buildHTML(d,null);openFull();});
+  state.generatedHTML=buildHTML(d);openFull();
 }
 
 /* ===== Build HTML ===== */
-function buildHTML(data,ai){
+function buildHTML(data){
   var TH={
     beige:{bg:'#FAF6F1',ac:'#C9A96E',tx:'#3A3A3A',thBg:'#F5EDE3',bd:'#E0D5C7',card:'#FFFFFF',tagBg:'rgba(201,169,110,.15)',tagC:'#8B7355',tdC:''},
     white:{bg:'#FFFFFF',ac:'#888',tx:'#222',thBg:'#F0F0F0',bd:'#E5E5E5',card:'#F8F8F8',tagBg:'#F0F0F0',tagC:'#666',tdC:''},
     dark:{bg:'#1A1A1A',ac:'#D4A574',tx:'#F5F5F5',thBg:'#252525',bd:'#333',card:'#2A2A2A',tagBg:'rgba(212,165,116,.15)',tagC:'#D4A574',tdC:'color:#ccc;'},
-    craft:{bg:'#F5EDE3',ac:'#8B7355',tx:'#4A4038',thBg:'#EDE4D8',bd:'#D5C8B8',card:'#FFF9F3',tagBg:'rgba(139,115,85,.15)',tagC:'#6B5A45',tdC:''}
+    craft:{bg:'#F5EDE3',ac:'#8B7355',tx:'#4A4038',thBg:'#EDE4D8',bd:'#D5C8B8',card:'#FFF9F3',tagBg:'rgba(139,115,85,.15)',tagC:'#6B5A45',tdC:''},
+    rose:{bg:'#FFF5F5',ac:'#C4787A',tx:'#4A3A3A',thBg:'#F5E8E8',bd:'#E5D0D0',card:'#FFFFFF',tagBg:'rgba(196,120,122,.12)',tagC:'#A05A5C',tdC:''},
+    olive:{bg:'#F5F5ED',ac:'#6B7355',tx:'#3A3A32',thBg:'#EAEBE0',bd:'#D0D2C0',card:'#FAFAF5',tagBg:'rgba(107,115,85,.12)',tagC:'#5A6245',tdC:''},
+    navy:{bg:'#1A1F2E',ac:'#A8B4C4',tx:'#E8ECF0',thBg:'#222838',bd:'#333A4A',card:'#252B3A',tagBg:'rgba(168,180,196,.15)',tagC:'#8A9AAE',tdC:'color:#bcc5d0;'},
+    mono:{bg:'#FFFFFF',ac:'#333',tx:'#111',thBg:'#F5F5F5',bd:'#E0E0E0',card:'#FAFAFA',tagBg:'#F0F0F0',tagC:'#555',tdC:''}
   };
   var T=TH[data.theme]||TH.beige;var w=data.pageWidth;var S=data.sections;
-  var h='<div id="generated-detail-page" style="width:'+w+'px;background:'+T.bg+';color:'+T.tx+';font-family:\'Noto Sans KR\',sans-serif;">';
-  function sh(t){return '<div style="font-size:37px;font-weight:600;text-align:center;margin-bottom:12px;letter-spacing:-.5px;">'+t+'</div><div style="width:48px;height:2px;background:'+T.ac+';margin:0 auto 40px;"></div>';}
+  var ff=data.fontFamily||'Noto Sans KR';
+  var fs=data.fontScale||100;
+  var fsMul=fs/100;
+  function fsz(base){return Math.round(base*fsMul)+'px';}
+  var ffStyle="font-family:'"+ff+"',sans-serif;";
+  var h='<div id="generated-detail-page" style="width:'+w+'px;background:'+T.bg+';color:'+T.tx+';'+ffStyle+'">';
+  function sh(t){return '<div style="font-size:'+fsz(37)+';font-weight:600;text-align:center;margin-bottom:12px;letter-spacing:-.5px;">'+t+'</div><div style="width:48px;height:2px;background:'+T.ac+';margin:0 auto 40px;"></div>';}
   var P='padding:80px 50px;';
 
-  // 메인컷 히어로
-  var mi=imgByTag('메인컷')||state.images[0];
-  if(mi){
-    h+='<div class="detail-section" style="padding:0;position:relative;overflow:hidden;">';
-    h+='<img src="'+mi.dataUrl+'" style="width:100%;display:block;" alt="'+data.productName+'">';
-    h+='<div style="position:absolute;bottom:0;left:0;right:0;padding:80px 50px 50px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;">';
-    h+='<div style="font-size:59px;font-weight:300;line-height:1.3;letter-spacing:-1px;">'+(data.productName||'')+'</div>';
-    if(data.tagline)h+='<div style="font-size:33px;opacity:.9;margin-top:16px;font-weight:300;">'+data.tagline+'</div>';
-    h+='</div></div>';
+  // ⓪ 브랜드 스토리 (최상단)
+  if(S.indexOf('brandStory')>=0&&(data.brandName||data.brandStory)){
+    h+='<div class="detail-section" data-section="brand" style="'+P+'text-align:center;">';
+    if(data.brandLogoData)h+='<img src="'+data.brandLogoData+'" style="max-width:160px;max-height:80px;margin:0 auto 24px;display:block;" alt="로고">';
+    if(data.brandName)h+='<div style="font-size:'+fsz(31)+';font-weight:600;margin-bottom:8px;">'+data.brandName+'</div>';
+    if(data.brandTagline)h+='<div style="font-size:'+fsz(23)+';color:'+T.ac+';margin-bottom:24px;">'+data.brandTagline+'</div>';
+    if(data.brandStory)h+='<div style="font-size:'+fsz(25)+';line-height:2.0;opacity:.7;max-width:520px;margin:0 auto;word-break:keep-all;">'+data.brandStory.replace(/\n/g,'<br>')+'</div>';
+    if(data.brandHeroData)h+='<img src="'+data.brandHeroData+'" style="width:100%;border-radius:8px;margin-top:32px;display:block;" alt="대표 이미지">';
+    h+='</div>';
+    h+='<div style="padding:0 50px;"><div style="width:100%;height:1px;background:linear-gradient(to right,transparent,'+T.bd+',transparent);"></div></div>';
   }
 
-  // ① 감성 스토리
+  // 메인컷 히어로 (이미지만)
+  var mi=imgByTag('메인컷')||state.images[0];
+  if(mi){
+    h+='<div class="detail-section" data-section="hero" style="padding:0;">';
+    h+='<img src="'+mi.dataUrl+'" style="width:100%;display:block;" alt="'+data.productName+'">';
+    h+='</div>';
+  }
+
+  // 제품명 + 감성 스토리
   if(S.indexOf('story')>=0){
-    var customStory=document.getElementById('storyText')?document.getElementById('storyText').value.trim():'';
-    var st=(ai&&ai.storyTitle)?ai.storyTitle:(data.tagline||'매일 들어도 질리지 않는, '+(data.bagType.length?data.bagType.join(' / '):'가죽가방'));
-    var sb=customStory?customStory:((ai&&ai.storyBody)?ai.storyBody:buildStory(data));
-    h+='<div class="detail-section" style="padding:100px 50px;text-align:center;">';
+    var sb=state.appliedStory||'';
+    h+='<div class="detail-section" data-section="story" style="padding:100px 50px;text-align:center;">';
     h+='<div style="width:1px;height:50px;background:'+T.ac+';margin:0 auto 40px;opacity:.4;"></div>';
-    h+='<div style="font-size:33px;font-weight:300;line-height:1.5;margin-bottom:28px;">'+st.replace(/\n/g,'<br>')+'</div>';
-    h+='<div style="font-size:27px;line-height:1.9;opacity:.7;max-width:520px;margin:0 auto;word-break:keep-all;">'+sb.replace(/\n/g,'<br>')+'</div>';
+    if(data.productName)h+='<div style="font-size:'+fsz(37)+';font-weight:600;line-height:1.4;margin-bottom:28px;letter-spacing:-.5px;">'+(data.productName||'')+'</div>';
+    if(sb){h+='<div style="font-size:'+fsz(27)+';line-height:1.9;opacity:.7;max-width:520px;margin:0 auto;word-break:keep-all;">'+sb.replace(/\n/g,'<br>')+'</div>';}
+    else{h+='<div style="font-size:'+fsz(23)+';opacity:.4;max-width:520px;margin:0 auto;">스토리 문구를 입력하고 적용 버튼을 눌러주세요</div>';}
     h+='<div style="width:1px;height:50px;background:'+T.ac+';margin:40px auto 0;opacity:.4;"></div>';
     h+='</div>';
   }
@@ -645,7 +876,7 @@ function buildHTML(data,ai){
   if(S.indexOf('gallery')>=0&&state.images.length>1){
     var ordered=[].concat(imgsByTag('정면컷'),imgsByTag('착용컷'));
     if(ordered.length>0){
-      h+='<div class="detail-section" style="'+P+'">';h+=sh('GALLERY');
+      h+='<div class="detail-section" data-section="gallery" style="'+P+'">';h+=sh('GALLERY');
       ordered.forEach(function(img){h+='<img src="'+img.dataUrl+'" style="width:100%;display:block;margin-bottom:8px;border-radius:4px;" alt="'+img.tag+'">';});
       h+='</div>';
     }
@@ -654,7 +885,7 @@ function buildHTML(data,ai){
   // ③ 소재 설명 (소재컷만, 확대 없이 원본 크기)
   if(S.indexOf('leather')>=0&&data.leather.length>0){
     var matImgs=imgsByTag('소재컷');
-    h+='<div class="detail-section" style="'+P+'text-align:center;">';h+=sh('MATERIAL');
+    h+='<div class="detail-section" data-section="leather" style="'+P+'text-align:center;">';h+=sh('MATERIAL');
     if(matImgs.length>0){
       matImgs.forEach(function(mi){
         h+='<img src="'+mi.dataUrl+'" style="width:100%;display:block;border-radius:8px;margin-bottom:12px;" alt="소재">';
@@ -664,21 +895,48 @@ function buildHTML(data,ai){
       var ldb=LDB[lthr];
       if(li>0)h+='<div style="width:48px;height:1px;background:'+T.ac+';margin:30px auto;opacity:.3;"></div>';
       if(ldb){
-        h+='<div style="font-size:31px;font-weight:600;margin:20px 0 16px;">'+ldb.t+'</div>';
+        h+='<div style="font-size:'+fsz(31)+';font-weight:600;margin:20px 0 16px;">'+ldb.t+'</div>';
         h+='<div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">';
-        ldb.f.forEach(function(f){h+='<span style="padding:10px 22px;border-radius:24px;font-size:25px;background:'+T.tagBg+';color:'+T.tagC+';">'+f+'</span>';});
-        h+='</div><div style="font-size:23px;opacity:.6;font-style:italic;max-width:520px;margin:0 auto;">'+ldb.n+'</div>';
-      }else{h+='<div style="font-size:31px;font-weight:600;margin-top:16px;">'+lthr+'</div>';}
+        ldb.f.forEach(function(f){h+='<span style="padding:10px 22px;border-radius:24px;font-size:'+fsz(25)+';background:'+T.tagBg+';color:'+T.tagC+';">'+f+'</span>';});
+        h+='</div><div style="font-size:'+fsz(23)+';opacity:.6;font-style:italic;max-width:520px;margin:0 auto;">'+ldb.n+'</div>';
+      }else{h+='<div style="font-size:'+fsz(31)+';font-weight:600;margin-top:16px;">'+lthr+'</div>';}
     });
     h+='</div>';
   }
 
+  // ③-2 색상 카드
+  var hasCustomColors=data.customColors&&data.customColors.length>0;
+  if(S.indexOf('leather')>=0&&(data.colors.length>0||hasCustomColors)){
+    var colorHex={"블랙":"#222","카멜":"#C4956A","에토프":"#8B7D6B","브라운":"#6B4226","탄":"#D2A168","버건디":"#722F37","네이비":"#1B2A4A","아이보리":"#FFFFF0","베이지":"#D4C5A9","그레이":"#909090","카키":"#5F6B4E","화이트":"#FFFFFF"};
+    function isLightColor(hex){var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);return(r*299+g*587+b*114)/1000>200;}
+    h+='<div class="detail-section" data-section="colors" style="'+P+'text-align:center;">';h+=sh('COLOR');
+    h+='<div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">';
+    data.colors.forEach(function(c){
+      var hex=colorHex[c]||T.ac;
+      var borderStyle=isLightColor(hex)?'border:1px solid rgba(0,0,0,.12);':'';
+      h+='<div style="display:flex;flex-direction:column;align-items:center;gap:10px;">';
+      h+='<div style="width:56px;height:56px;border-radius:50%;background:'+hex+';box-shadow:0 2px 8px rgba(0,0,0,.12);'+borderStyle+'"></div>';
+      h+='<div style="font-size:'+fsz(23)+';font-weight:500;color:'+T.tx+';">'+c+'</div>';
+      h+='</div>';
+    });
+    if(hasCustomColors){
+      data.customColors.forEach(function(cc){
+        var borderStyle=isLightColor(cc.hex)?'border:1px solid rgba(0,0,0,.12);':'';
+        h+='<div style="display:flex;flex-direction:column;align-items:center;gap:10px;">';
+        h+='<div style="width:56px;height:56px;border-radius:50%;background:'+cc.hex+';box-shadow:0 2px 8px rgba(0,0,0,.12);'+borderStyle+'"></div>';
+        h+='<div style="font-size:'+fsz(23)+';font-weight:500;color:'+T.tx+';">'+(cc.name||cc.hex)+'</div>';
+        h+='</div>';
+      });
+    }
+    h+='</div></div>';
+  }
+
   // ④ 착용 방식 (텍스트 태그)
   if(S.indexOf('wearing')>=0&&data.wearStyle.length>0){
-    h+='<div class="detail-section" style="'+P+'text-align:center;">';h+=sh('STYLE');
+    h+='<div class="detail-section" data-section="wearing" style="'+P+'text-align:center;">';h+=sh('STYLE');
     h+='<div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">';
     data.wearStyle.forEach(function(ws){
-      h+='<span style="padding:12px 28px;border:2px solid '+T.ac+';border-radius:30px;font-size:25px;font-weight:600;color:'+T.ac+';">'+ws+'</span>';
+      h+='<span style="padding:12px 28px;border:2px solid '+T.ac+';border-radius:30px;font-size:'+fsz(25)+';font-weight:600;color:'+T.ac+';">'+ws+'</span>';
     });
     h+='</div></div>';
   }
@@ -686,12 +944,12 @@ function buildHTML(data,ai){
   // ⑤ 사이즈 (라인 드로잉 SVG + 테이블)
   if(S.indexOf('size')>=0&&data.sizes.type!=='none'&&data.sizes.sizes.length>0){
     var szImg=imgByTag('사이즈컷');
-    h+='<div class="detail-section" style="'+P+'text-align:center;">';h+=sh('SIZE');
+    h+='<div class="detail-section" data-section="size" style="'+P+'text-align:center;">';h+=sh('SIZE');
     if(szImg)h+='<img src="'+szImg.dataUrl+'" style="width:100%;border-radius:8px;margin-bottom:20px;" alt="사이즈">';
     var dimC=T.ac;var lineC=T.tx==='#F5F5F5'?'#888':'#999';var strokeC=T.tx==='#F5F5F5'?'#ccc':'#333';var strokeC2=T.tx==='#F5F5F5'?'#aaa':'#555';
     data.sizes.sizes.forEach(function(s){
       var ww=s.w||'',hh2=s.h||'',dd=s.d||'',hhh=s.hh||'';
-      if(s.name)h+='<div style="font-size:29px;font-weight:600;color:'+T.ac+';margin:24px 0 16px;">'+s.name+'</div>';
+      if(s.name)h+='<div style="font-size:'+fsz(29)+';font-weight:600;color:'+T.ac+';margin:24px 0 16px;">'+s.name+'</div>';
       h+='<div style="display:flex;align-items:center;gap:40px;margin-bottom:30px;">';
       h+='<div style="flex:1;min-width:0;">';
       h+='<svg viewBox="0 0 420 440" style="width:100%;max-width:380px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">';
@@ -713,10 +971,10 @@ function buildHTML(data,ai){
       h+='</svg></div>';
       h+='<div style="flex:1;min-width:0;text-align:left;">';
       h+='<table style="border-collapse:collapse;width:100%;">';
-      if(ww)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:27px;">A</span><span style="margin-left:14px;color:'+lineC+';font-size:23px;">가로</span></td><td style="padding:18px 0 18px 24px;font-size:27px;font-weight:500;text-align:right;">'+ww+' cm</td></tr>';
-      if(hh2)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:27px;">B</span><span style="margin-left:14px;color:'+lineC+';font-size:23px;">높이</span></td><td style="padding:18px 0 18px 24px;font-size:27px;font-weight:500;text-align:right;">'+hh2+' cm</td></tr>';
-      if(dd)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:27px;">C</span><span style="margin-left:14px;color:'+lineC+';font-size:23px;">폭</span></td><td style="padding:18px 0 18px 24px;font-size:27px;font-weight:500;text-align:right;">'+dd+' cm</td></tr>';
-      if(hhh)h+='<tr><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:27px;">D</span><span style="margin-left:14px;color:'+lineC+';font-size:23px;">핸들 높이</span></td><td style="padding:18px 0 18px 24px;font-size:27px;font-weight:500;text-align:right;">'+hhh+' cm</td></tr>';
+      if(ww)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:'+fsz(27)+';">A</span><span style="margin-left:14px;color:'+lineC+';font-size:'+fsz(23)+';">가로</span></td><td style="padding:18px 0 18px 24px;font-size:'+fsz(27)+';font-weight:500;text-align:right;">'+ww+' cm</td></tr>';
+      if(hh2)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:'+fsz(27)+';">B</span><span style="margin-left:14px;color:'+lineC+';font-size:'+fsz(23)+';">높이</span></td><td style="padding:18px 0 18px 24px;font-size:'+fsz(27)+';font-weight:500;text-align:right;">'+hh2+' cm</td></tr>';
+      if(dd)h+='<tr style="border-bottom:1px solid '+T.bd+';"><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:'+fsz(27)+';">C</span><span style="margin-left:14px;color:'+lineC+';font-size:'+fsz(23)+';">폭</span></td><td style="padding:18px 0 18px 24px;font-size:'+fsz(27)+';font-weight:500;text-align:right;">'+dd+' cm</td></tr>';
+      if(hhh)h+='<tr><td style="padding:18px 24px 18px 0;"><span style="font-weight:700;color:'+T.ac+';font-size:'+fsz(27)+';">D</span><span style="margin-left:14px;color:'+lineC+';font-size:'+fsz(23)+';">핸들 높이</span></td><td style="padding:18px 0 18px 24px;font-size:'+fsz(27)+';font-weight:500;text-align:right;">'+hhh+' cm</td></tr>';
       h+='</table>';
       h+='</div></div>';
     });
@@ -725,51 +983,53 @@ function buildHTML(data,ai){
 
   // ⑥ 내부 구조 (텍스트 + 장점)
   if(S.indexOf('interior')>=0&&data.interior.length>0){
-    var intImg=imgByTag('내부컷');
-    h+='<div class="detail-section" style="'+P+'">';h+=sh('INTERIOR');
-    if(intImg)h+='<img src="'+intImg.dataUrl+'" style="width:100%;border-radius:8px;margin-bottom:24px;" alt="내부">';
+    var intImgs=imgsByTag('내부컷');
+    h+='<div class="detail-section" data-section="interior" style="'+P+'">';h+=sh('INTERIOR');
+    if(intImgs.length>0){intImgs.slice(0,10).forEach(function(ii){h+='<img src="'+ii.dataUrl+'" style="width:100%;display:block;border-radius:8px;margin-bottom:12px;" alt="내부">';});}
     var intAdvMap={"내부 지퍼 포켓":"소중한 물건을 안전하게 보관","오픈 포켓":"자주 꺼내는 물건을 빠르게 수납","카드 슬롯":"교통카드나 명함을 바로 꺼낼 수 있는","내부 분리 수납칸":"물건을 깔끔하게 분류할 수 있는","이너백 (탈부착)":"가방 속 정리가 쉽고 분리 세탁 가능","이너백 (고정형)":"내부가 항상 깔끔하게 유지되는","키홀더/키링":"열쇠를 찾느라 가방을 뒤질 일이 없는","펜홀더":"펜을 바로 꺼낼 수 있는 실용적인","바닥 보강 처리":"바닥에 놓아도 형태가 유지되는"};
     h+='<div style="max-width:520px;margin:0 auto;">';
     data.interior.forEach(function(item){
       var desc=intAdvMap[item.name]||'실용적인 구조';
       h+='<div style="padding:16px 0;border-bottom:1px solid '+T.bd+';">';
-      h+='<span style="font-size:27px;font-weight:600;">'+item.name+(item.count?' '+item.count+'개':'')+'</span>';
-      h+='<span style="font-size:23px;opacity:.55;margin-left:12px;">'+desc+'</span>';
+      h+='<span style="font-size:'+fsz(27)+';font-weight:600;">'+item.name+(item.count?' '+item.count+'개':'')+'</span>';
+      h+='<span style="font-size:'+fsz(23)+';opacity:.55;margin-left:12px;">'+desc+'</span>';
       h+='</div>';
     });
     h+='</div></div>';
   }
 
-  // ⑧ 제품 장점 (랜덤 2개 이미지 + 스토리)
-  if(S.indexOf('advantages')>=0){
-    var advTxt=(ai&&ai.advantagesText)?ai.advantagesText:buildAdvStory(data);
-    if(advTxt){
-      var rImgs=randomImgs(1);
-      h+='<div class="detail-section" style="'+P+'">';h+=sh('WHY THIS BAG');
-      if(rImgs.length>=1){
-        h+='<img src="'+rImgs[0].dataUrl+'" style="width:100%;border-radius:8px;margin-bottom:24px;display:block;" alt="">';
-      }
-      h+='<div style="font-size:27px;line-height:2.0;text-align:center;max-width:560px;margin:0 auto;">'+advTxt.replace(/\n/g,'<br>')+'</div>';
-      h+='</div>';
-    }
-  }
-
-  // ⑨ 추천 대상 (착용컷 2개 + 스토리)
-  if(S.indexOf('target')>=0&&data.recommend.length>0){
-    var recTxt=(ai&&ai.recommendText)?ai.recommendText:buildRecStory(data);
-    var wearImgs=imgsByTag('착용컷').slice(0,1);
-    h+='<div class="detail-section" style="'+P+'">';h+=sh('FOR YOU');
-    if(wearImgs.length>=1){
-      h+='<img src="'+wearImgs[0].dataUrl+'" style="width:100%;border-radius:8px;margin-bottom:24px;display:block;" alt="착용컷">';
-    }
-    h+='<div style="font-size:27px;line-height:2.0;text-align:center;max-width:560px;margin:0 auto;">'+recTxt.replace(/\n/g,'<br>')+'</div>';
+  // ⑦ 디테일컷
+  var detImgs=imgsByTag('디테일컷');
+  if(detImgs.length>0){
+    h+='<div class="detail-section" data-section="detail" style="'+P+'text-align:center;">';h+=sh('DETAIL');
+    detImgs.slice(0,10).forEach(function(di){h+='<img src="'+di.dataUrl+'" style="width:100%;display:block;border-radius:8px;margin-bottom:12px;" alt="디테일">';});
     h+='</div>';
   }
 
-  // ⑩ 스펙
+  // ⑦ 추천 대상 (포유컷 + 스토리)
+  if(S.indexOf('target')>=0&&data.recommend.length>0){
+    var recTxt=buildRecStory(data);
+    var fyImgs=imgsByTag('포유컷');
+    h+='<div class="detail-section" data-section="target" style="'+P+'">';h+=sh('FOR YOU');
+    if(fyImgs.length>0){fyImgs.slice(0,10).forEach(function(fi){h+='<img src="'+fi.dataUrl+'" style="width:100%;display:block;border-radius:8px;margin-bottom:12px;" alt="포유컷">';});}
+    h+='<div style="font-size:'+fsz(27)+';line-height:2.0;text-align:center;max-width:560px;margin:0 auto;">'+recTxt.replace(/\n/g,'<br>')+'</div>';
+    h+='</div>';
+  }
+
+  // ⑧ 제작 방식
+  if(S.indexOf('craftsmanship')>=0&&data.production){
+    h+='<div class="detail-section" data-section="craftsmanship" style="'+P+'text-align:center;">';h+=sh('CRAFTSMANSHIP');
+    h+='<div style="font-size:'+fsz(29)+';font-weight:600;margin-bottom:16px;color:'+T.ac+';">'+data.production+'</div>';
+    if(data.productionDetail){
+      h+='<div style="font-size:'+fsz(25)+';line-height:2.0;opacity:.7;max-width:520px;margin:0 auto;word-break:keep-all;">'+data.productionDetail.replace(/\n/g,'<br>')+'</div>';
+    }
+    h+='</div>';
+  }
+
+  // ⑨ 스펙 정리
   if(S.indexOf('spec')>=0){
-    var thS='background:'+T.thBg+';border-bottom:1px solid '+T.bd+';padding:16px 20px;text-align:left;width:140px;font-weight:600;font-size:25px;'+(data.theme==='dark'?'color:#D4A574;':'');
-    var tdS='padding:16px 20px;border-bottom:1px solid '+T.bd+';font-size:25px;'+T.tdC;
+    var thS='background:'+T.thBg+';border-bottom:1px solid '+T.bd+';padding:16px 20px;text-align:left;width:140px;font-weight:600;font-size:'+fsz(25)+';'+((data.theme==='dark'||data.theme==='navy')?'color:'+T.ac+';':'');
+    var tdS='padding:16px 20px;border-bottom:1px solid '+T.bd+';font-size:'+fsz(25)+';'+T.tdC;
     var rows='';
     function ar(l,v){if(v)rows+='<tr><th style="'+thS+'">'+l+'</th><td style="'+tdS+'">'+v+'</td></tr>';}
     ar('제품명',data.productName);if(data.brandName)ar('브랜드',data.brandName);ar('종류',data.bagType.join(', '));ar('소재',data.leather.join(', '));
@@ -782,15 +1042,15 @@ function buildHTML(data,ai){
     if(data.strapMin&&data.strapMax)ar('스트랩',data.strapMin+'cm ~ '+data.strapMax+'cm');
     if(data.interior.length)ar('내부 구조',data.interior.map(function(i){return i.count?i.name+' '+i.count+'개':i.name;}).join(', '));
     if(data.production)ar('제작',data.production);
-    h+='<div class="detail-section" style="'+P+'">';h+=sh('SPEC');
+    h+='<div class="detail-section" data-section="spec" style="'+P+'">';h+=sh('SPEC');
     h+='<table style="width:100%;border-collapse:collapse;font-size:25px;">'+rows+'</table></div>';
   }
 
   // ⑪ 배송
   if(S.indexOf('shipping')>=0){
     var lines=data.shippingText.split('\n');var shipH='';
-    lines.forEach(function(l){var t=l.trim();if(!t){shipH+='<br>';return;}if(t.indexOf('─')>=0){shipH+='<div style="width:60px;height:1px;background:'+T.bd+';margin:6px 0 10px;"></div>';return;}if(t.endsWith('안내')){shipH+='<div style="font-size:27px;font-weight:600;margin-top:20px;margin-bottom:6px;">'+t+'</div>';}else{shipH+='<div style="font-size:25px;line-height:1.8;">'+t+'</div>';}});
-    h+='<div class="detail-section" style="'+P+'">';h+=sh('SHIPPING');
+    lines.forEach(function(l){var t=l.trim();if(!t){shipH+='<br>';return;}if(t.indexOf('─')>=0){shipH+='<div style="width:60px;height:1px;background:'+T.bd+';margin:6px 0 10px;"></div>';return;}if(t.endsWith('안내')){shipH+='<div style="font-size:'+fsz(27)+';font-weight:600;margin-top:20px;margin-bottom:6px;">'+t+'</div>';}else{shipH+='<div style="font-size:'+fsz(25)+';line-height:1.8;">'+t+'</div>';}});
+    h+='<div class="detail-section" data-section="shipping" style="'+P+'">';h+=sh('SHIPPING');
     h+='<div style="max-width:560px;margin:0 auto;">'+shipH+'</div></div>';
   }
 
@@ -988,74 +1248,51 @@ function buildStory(d, keywords){
   // 최종 조립: 각 블록 사이에 빈 줄 넣기
   return parts.join('\n\n');
 }
-function regenerateStory(){
-  var d=collect();
-  var currentText=document.getElementById('storyText').value.trim();
-  var apiKey=document.getElementById('apiKey').value.trim();
-
-  // 원본 키워드 저장: 처음 새로 생성 클릭 시 현재 텍스트를 원본으로 기억
-  if(!state.originalStoryKeywords && currentText){
-    state.originalStoryKeywords=currentText;
-    updateStoryKeywordIndicator();
-  }
-
-  // 항상 처음 입력한 원본 키워드를 기준으로 생성
-  var keywords=state.originalStoryKeywords;
-
-  if(apiKey){
-    showLoading(true,'AI 감성 스토리 생성 중...');
-    var prompt='당신은 최고의 가죽가방 상세페이지 카피라이터입니다.\n';
-    prompt+='아래 정보를 바탕으로, 구매자가 공감하고 마음이 움직이는 감성 스토리를 작성해주세요.\n\n';
-    prompt+='[제품 정보]\n';
-    if(d.productName)prompt+='- 제품명: '+d.productName+'\n';
-    prompt+='- 가방 종류: '+(d.bagType.length?d.bagType.join(', '):'가방')+'\n';
-    prompt+='- 소재: '+(d.leather.length?d.leather.join(', '):'가죽')+'\n';
-    if(d.colors.length)prompt+='- 색상: '+d.colors.join(', ')+'\n';
-    if(d.wearStyle.length)prompt+='- 착용방식: '+d.wearStyle.join(', ')+'\n';
-    if(d.production)prompt+='- 제작: '+d.production+'\n';
-    if(d.recommend.length)prompt+='- 추천 상황: '+d.recommend.join(', ')+'\n';
-    if(d.targetAge.length)prompt+='- 타겟 연령: '+d.targetAge.join(', ')+'\n';
-    prompt+='\n[핵심 키워드/문구 - 반드시 이 내용을 중심 테마로 스토리를 전개해줘]\n';
-    prompt+=keywords||'(없음 - 제품 정보 기반으로 자유롭게 작성)';
-    prompt+='\n\n[작성 규칙]\n';
-    prompt+='1. 위 키워드/문구의 감성을 핵심으로 삼아 스토리를 전개할 것\n';
-    prompt+='2. 구매자의 일상 속 장면을 구체적으로 그려줄 것\n';
-    prompt+='3. 소재의 촉감, 무게감, 질감 등 오감을 자극하는 표현을 넣을 것\n';
-    prompt+='4. 줄바꿈으로 구분. 이모지 금지\n';
-    prompt+='5. 이전에 작성한 것과 완전히 다른 새로운 관점과 감성으로 작성할 것\n';
-    prompt+='6. 과장하지 말고 진정성 있게, 그러나 아름답게 써줘';
-    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:1.0,maxOutputTokens:800}})
-    }).then(function(r){return r.json();}).then(function(j){
-      showLoading(false);
-      var text=(j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts&&j.candidates[0].content.parts[0])?j.candidates[0].content.parts[0].text:'';
-      if(text){document.getElementById('storyText').value=text.trim();showToast('감성 스토리가 생성되었습니다!');}
-      else{document.getElementById('storyText').value=buildStory(d,keywords);showToast('AI 응답이 없어 기본 스토리를 생성했습니다.');}
-    }).catch(function(){
-      showLoading(false);
-      document.getElementById('storyText').value=buildStory(d,keywords);
-      showToast('API 오류 - 기본 스토리를 생성했습니다.');
-    });
-  }else{
-    document.getElementById('storyText').value=buildStory(d,keywords);
-    showToast(keywords?'원본 키워드 기반으로 새로운 감성 스토리가 생성되었습니다!':'스토리가 새로 생성되었습니다!');
-  }
+/* ===== Brand Logo ===== */
+function handleBrandLogo(files){
+  if(!files||!files.length)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    state.brandLogoData=e.target.result;
+    document.getElementById('brandLogoImg').src=e.target.result;
+    document.getElementById('brandLogoPreview').style.display='inline-block';
+    document.getElementById('brandLogoLabel').style.display='none';
+    schedulePreview();
+  };
+  r.readAsDataURL(files[0]);
 }
-function clearStoryKeyword(){
-  state.originalStoryKeywords='';
-  updateStoryKeywordIndicator();
-  document.getElementById('storyText').value='';
-  showToast('원본 키워드가 초기화되었습니다. 새 키워드를 입력해주세요.');
+function removeBrandLogo(){
+  state.brandLogoData='';
+  document.getElementById('brandLogoPreview').style.display='none';
+  document.getElementById('brandLogoLabel').style.display='inline-flex';
+  schedulePreview();
 }
-function updateStoryKeywordIndicator(){
-  var ind=document.getElementById('storyKeywordIndicator');
-  var txt=document.getElementById('storyKeywordText');
-  if(state.originalStoryKeywords){
-    var kw=state.originalStoryKeywords;
-    txt.textContent=kw.length>60?kw.substring(0,60)+'...':kw;
-    ind.style.display='block';
-  }else{ind.style.display='none';}
+function handleBrandHero(files){
+  if(!files||!files.length)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    state.brandHeroData=e.target.result;
+    document.getElementById('brandHeroImg').src=e.target.result;
+    document.getElementById('brandHeroPreview').style.display='inline-block';
+    document.getElementById('brandHeroLabel').style.display='none';
+    schedulePreview();
+  };
+  r.readAsDataURL(files[0]);
+}
+function removeBrandHero(){
+  state.brandHeroData='';
+  document.getElementById('brandHeroPreview').style.display='none';
+  document.getElementById('brandHeroLabel').style.display='inline-flex';
+  schedulePreview();
+}
+
+function applyStory(){
+  var text=document.getElementById('storyText').value.trim();
+  if(!text){showToast('스토리 문구를 입력해주세요.');return;}
+  state.appliedStory=text;
+  document.getElementById('storyStatus').textContent='✓ 적용됨';
+  schedulePreview();
+  showToast('스토리 문구가 적용되었습니다!');
 }
 function buildAdvStory(d){
   var l=[];if(d.leather&&d.leather.length){var firstL=d.leather[0];var ldb=LDB[firstL];l.push(ldb?ldb.f[0]+'.\n하지만 '+(ldb.f[1]||'내구성도 뛰어납니다')+'.':firstL+' 소재의 질감이 돋보입니다.');if(d.leather.length>1)l.push(d.leather.slice(1).join(', ')+' 소재와의 조화로\n더욱 특별한 매력을 완성합니다.');}
@@ -1075,7 +1312,7 @@ function openFull(){
   var d=collect();var pw=d.pageWidth;
   var frame=document.getElementById('fullFrame');
   frame.style.width=pw+'px';
-  frame.innerHTML=state.generatedHTML||buildHTML(d,null);
+  frame.innerHTML=state.generatedHTML||buildHTML(d);
   document.getElementById('fullOverlay').classList.add('active');
   document.body.style.overflow='hidden';
 }
@@ -1099,19 +1336,22 @@ function downloadImages(){
   },500);
 }
 function downloadHTML(){
-  var content=state.generatedHTML||buildHTML(collect(),null);
-  var full='<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:\'Noto Sans KR\',sans-serif;display:flex;justify-content:center;background:#f5f5f5;}</style></head><body>'+content+'</body></html>';
+  var content=state.generatedHTML||buildHTML(collect());
+  var d=collect();var ff=d.fontFamily||'Noto Sans KR';
+  var fontLinks='<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
+  if(ff==='Pretendard')fontLinks+='<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">';
+  var full='<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'+fontLinks+'<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:\''+ff+'\',sans-serif;display:flex;justify-content:center;background:#f5f5f5;}</style></head><body>'+content+'</body></html>';
   var blob=new Blob([full],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.download='상세페이지.html';a.href=url;a.click();URL.revokeObjectURL(url);showToast('HTML 다운로드 완료!');
 }
 function copyHTML(){
-  var content=state.generatedHTML||buildHTML(collect(),null);
+  var content=state.generatedHTML||buildHTML(collect());
   if(navigator.clipboard)navigator.clipboard.writeText(content).then(function(){showToast('클립보드에 복사되었습니다!');});
   else{var ta=document.createElement('textarea');ta.value=content;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('클립보드에 복사되었습니다!');}
 }
 
 /* ===== Save / Load ===== */
 function saveProject(){
-  var d=collect();d._savedImages=state.images.map(function(i){return{id:i.id,dataUrl:i.dataUrl,tag:i.tag};});d._generatedHTML=state.generatedHTML;
+  var d=collect();d._savedImages=state.images.map(function(i){return{id:i.id,dataUrl:i.dataUrl,tag:i.tag};});d._generatedHTML=state.generatedHTML;d._appliedStory=state.appliedStory;
   var fn=document.getElementById('saveFileName').value.trim()||d.productName||'상세페이지';fn=fn.replace(/[<>:"/\\|?*]/g,'_');
   var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.download=fn+'.json';a.href=url;a.click();URL.revokeObjectURL(url);showToast('저장 완료!');
 }
@@ -1136,17 +1376,22 @@ function applyData(d){
   if(d.productName)document.getElementById('productName').value=d.productName;
   if(d.weight)document.getElementById('weight').value=d.weight;
   if(d.brandName)document.getElementById('brandName').value=d.brandName;
-  if(d.tagline)document.getElementById('tagline').value=d.tagline;
+  if(d.brandTagline)document.getElementById('brandTagline').value=d.brandTagline;
+  if(d.brandStory)document.getElementById('brandStory').value=d.brandStory;
+  if(d.brandLogoData){state.brandLogoData=d.brandLogoData;document.getElementById('brandLogoImg').src=d.brandLogoData;document.getElementById('brandLogoPreview').style.display='inline-block';document.getElementById('brandLogoLabel').style.display='none';}
+  if(d.brandHeroData){state.brandHeroData=d.brandHeroData;document.getElementById('brandHeroImg').src=d.brandHeroData;document.getElementById('brandHeroPreview').style.display='inline-block';document.getElementById('brandHeroLabel').style.display='none';}
   if(d.storyText)document.getElementById('storyText').value=d.storyText;
   if(d.strapMin)document.getElementById('strapMin').value=d.strapMin;
   if(d.strapMax)document.getElementById('strapMax').value=d.strapMax;
   if(d.shippingText)document.getElementById('shippingText').value=d.shippingText;
+  if(d.productionDetail)document.getElementById('productionDetail').value=d.productionDetail;
   if(d.sizes){var st=d.sizes.type||'none';var sr=document.querySelector('input[name="sizeType"][value="'+st+'"]');if(sr)sr.checked=true;togSizeUI();
     if(st==='single'&&d.sizes.sizes&&d.sizes.sizes[0]){var s=d.sizes.sizes[0];if(s.name)document.getElementById('singleName').value=s.name;if(s.w)document.getElementById('singleW').value=s.w;if(s.h)document.getElementById('singleH').value=s.h;if(s.d)document.getElementById('singleD').value=s.d;if(s.hh)document.getElementById('singleHH').value=s.hh;}
     else if(st==='multi'&&d.sizes.sizes){document.getElementById('sizeRows').innerHTML='';d.sizes.sizes.forEach(function(s){addSzRow();var rows=document.querySelectorAll('#sizeRows > div');var lr=rows[rows.length-1];if(s.name)lr.querySelector('[data-role="name"]').value=s.name;if(s.w)lr.querySelector('[data-role="w"]').value=s.w;if(s.h)lr.querySelector('[data-role="h"]').value=s.h;if(s.d)lr.querySelector('[data-role="d"]').value=s.d;if(s.hh){var hhi=lr.querySelector('[data-role="hh"]');if(hhi)hhi.value=s.hh;}});}
   }
   document.getElementById('saveFileName').value=d.productName||'';
   if(d._generatedHTML)state.generatedHTML=d._generatedHTML;
+  if(d._appliedStory){state.appliedStory=d._appliedStory;document.getElementById('storyStatus').textContent='✓ 적용됨';}
   updateUI();
 }
 
@@ -1154,15 +1399,66 @@ function applyData(d){
 function showLoading(s,t){var el=document.getElementById('loadingOverlay');if(s){document.getElementById('loadingText').textContent=t||'처리 중...';el.classList.add('active');}else el.classList.remove('active');}
 function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 
-/* ===== API Key auto-save ===== */
-(function(){
-  var ak=document.getElementById('apiKey');
-  var saved=localStorage.getItem('gemini_api_key');
-  if(saved)ak.value=saved;
-  ak.addEventListener('input',function(){localStorage.setItem('gemini_api_key',ak.value);});
-})();
-
+/* ===== Style Settings Save/Load ===== */
+function saveStyleSettings(){
+  var s={
+    theme:gR('theme')||'beige',
+    pageWidth:gR('pageWidth')||'860',
+    fontFamily:gR('fontFamily')||'Noto Sans KR',
+    fontScale:document.getElementById('fontSizeRange').value||'100',
+    sections:gC('sections')
+  };
+  localStorage.setItem('styleSettings',JSON.stringify(s));
+  document.getElementById('styleSaveStatus').textContent='✓ 저장됨';
+  showToast('스타일 설정이 저장되었습니다!');
+}
+function loadStyleSettings(){
+  var raw=localStorage.getItem('styleSettings');
+  if(!raw)return;
+  try{var s=JSON.parse(raw);}catch(e){return;}
+  if(s.theme){var el=document.querySelector('input[name="theme"][value="'+s.theme+'"]');if(el)el.checked=true;}
+  if(s.pageWidth){var el=document.querySelector('input[name="pageWidth"][value="'+s.pageWidth+'"]');if(el)el.checked=true;}
+  if(s.fontFamily){var el=document.querySelector('input[name="fontFamily"][value="'+s.fontFamily+'"]');if(el)el.checked=true;}
+  if(s.fontScale){document.getElementById('fontSizeRange').value=s.fontScale;document.getElementById('fontSizeLabel').textContent=s.fontScale+'%';}
+  if(s.sections&&s.sections.length){
+    document.querySelectorAll('input[name="sections"]').forEach(function(el){el.checked=false;});
+    s.sections.forEach(function(v){var el=document.querySelector('input[name="sections"][value="'+v+'"]');if(el)el.checked=true;});
+  }
+  document.getElementById('styleSaveStatus').textContent='✓ 저장된 설정 적용됨';
+}
+/* ===== Brand Story Save/Load ===== */
+function saveBrandStory(){
+  var b={
+    brandName:document.getElementById('brandName').value.trim(),
+    brandTagline:document.getElementById('brandTagline').value.trim(),
+    brandStory:document.getElementById('brandStory').value.trim(),
+    brandLogoData:state.brandLogoData||'',
+    brandHeroData:state.brandHeroData||''
+  };
+  localStorage.setItem('brandStoryData',JSON.stringify(b));
+  document.getElementById('brandSaveStatus').textContent='✓ 저장됨';
+  showToast('브랜드 스토리가 저장되었습니다!');
+}
+function loadBrandStory(){
+  var raw=localStorage.getItem('brandStoryData');
+  if(!raw)return;
+  try{var b=JSON.parse(raw);}catch(e){return;}
+  if(b.brandName)document.getElementById('brandName').value=b.brandName;
+  if(b.brandTagline)document.getElementById('brandTagline').value=b.brandTagline;
+  if(b.brandStory)document.getElementById('brandStory').value=b.brandStory;
+  if(b.brandLogoData){state.brandLogoData=b.brandLogoData;document.getElementById('brandLogoImg').src=b.brandLogoData;document.getElementById('brandLogoPreview').style.display='inline-block';document.getElementById('brandLogoLabel').style.display='none';}
+  if(b.brandHeroData){state.brandHeroData=b.brandHeroData;document.getElementById('brandHeroImg').src=b.brandHeroData;document.getElementById('brandHeroPreview').style.display='inline-block';document.getElementById('brandHeroLabel').style.display='none';}
+  document.getElementById('brandSaveStatus').textContent='✓ 저장된 브랜드 적용됨';
+}
+loadStyleSettings();
+loadBrandStory();
 updateUI();
+
+/* ===== Section Highlight on Focus ===== */
+document.getElementById('inputPanel').addEventListener('click',function(e){
+  var el=e.target.closest('[data-target]');
+  if(el){var t=el.getAttribute('data-target');if(t)highlightPreviewSection(t);}
+},true);
 </script>
 </body>
 </html>
