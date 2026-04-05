@@ -1117,7 +1117,8 @@ function buildHTML(data){
     var rows='';
     function ar(l,v){if(v)rows+='<tr><th style="'+thS+'">'+l+'</th><td style="'+tdS+'">'+v+'</td></tr>';}
     ar('제품명',data.productName);if(data.brandName)ar('브랜드',data.brandName);ar('종류',data.bagType.join(', '));ar('소재',data.leather.join(', '));
-    if(data.colors.length)ar('색상',data.colors.join(', '));
+    var allColors=data.colors.slice();if(data.customColors&&data.customColors.length)data.customColors.forEach(function(cc){if(cc.name)allColors.push(cc.name);});
+    if(allColors.length)ar('색상',allColors.join(', '));
     if(data.wearStyle.length)ar('착용',data.wearStyle.join(', '));
     if(data.sizes.type!=='none'&&data.sizes.sizes.length){
       ar('사이즈',data.sizes.sizes.map(function(s){var p=[];if(s.w)p.push('가로 '+s.w+'cm');if(s.h)p.push('세로 '+s.h+'cm');if(s.d)p.push('폭 '+s.d+'cm');if(s.hh)p.push('핸들 '+s.hh+'cm');return (s.name?s.name+': ':'')+p.join(' × ');}).join('<br>'));
