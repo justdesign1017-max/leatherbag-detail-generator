@@ -1469,6 +1469,10 @@ function applyData(d){
   if(d.strapMax)document.getElementById('strapMax').value=d.strapMax;
   if(d.shippingText)document.getElementById('shippingText').value=d.shippingText;
   if(d.productionDetail)document.getElementById('productionDetail').value=d.productionDetail;
+  if(d.forYouCustom)document.getElementById('forYouCustom').value=d.forYouCustom;
+  if(d.customColors&&d.customColors.length){customColors=d.customColors;renderCustomColors();}
+  if(d.fontFamily)sR('fontFamily',d.fontFamily);
+  if(d.fontScale){document.getElementById('fontSizeRange').value=d.fontScale;var lbl=document.getElementById('fontSizeLabel');if(lbl)lbl.textContent=d.fontScale+'%';}
   if(d.sizes){var st=d.sizes.type||'none';var sr=document.querySelector('input[name="sizeType"][value="'+st+'"]');if(sr)sr.checked=true;togSizeUI();
     if(st==='single'&&d.sizes.sizes&&d.sizes.sizes[0]){var s=d.sizes.sizes[0];if(s.name)document.getElementById('singleName').value=s.name;if(s.w)document.getElementById('singleW').value=s.w;if(s.h)document.getElementById('singleH').value=s.h;if(s.d)document.getElementById('singleD').value=s.d;if(s.hh)document.getElementById('singleHH').value=s.hh;}
     else if(st==='multi'&&d.sizes.sizes){document.getElementById('sizeRows').innerHTML='';d.sizes.sizes.forEach(function(s){addSzRow();var rows=document.querySelectorAll('#sizeRows > div');var lr=rows[rows.length-1];if(s.name)lr.querySelector('[data-role="name"]').value=s.name;if(s.w)lr.querySelector('[data-role="w"]').value=s.w;if(s.h)lr.querySelector('[data-role="h"]').value=s.h;if(s.d)lr.querySelector('[data-role="d"]').value=s.d;if(s.hh){var hhi=lr.querySelector('[data-role="hh"]');if(hhi)hhi.value=s.hh;}});}
