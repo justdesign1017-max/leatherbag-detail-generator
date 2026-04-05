@@ -501,6 +501,10 @@ h3{font-size:var(--font-md);font-weight:600;letter-spacing:-.1px;}
 <label class="opt-item"><input type="checkbox" name="recommend" value="비즈니스 미팅"> 비즈니스 미팅</label>
 <label class="opt-item"><input type="checkbox" name="recommend" value="선물용"> 선물용</label>
 </div>
+<div style="margin-top:12px;">
+<label style="font-size:13px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">✏️ 직접 입력 (입력 시 위 선택 대신 이 내용이 표시됩니다)</label>
+<textarea id="forYouCustom" rows="4" placeholder="예: 매일 출퇴근길, 가볍지만 품격 있는 가방을 찾는 당신에게.&#10;소중한 사람에게 특별한 선물을 준비하고 싶은 분에게 추천합니다." style="width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:14px;resize:vertical;font-family:inherit;line-height:1.8;box-sizing:border-box;" oninput="schedulePreview()"></textarea>
+</div>
 </div></div></div>
 
 <!-- ━━━ 제작 방식 ━━━ -->
@@ -804,7 +808,9 @@ function handleFiles(files){
   imgs.forEach(function(file){
     var r=new FileReader();
     r.onload=function(e){
-      state.images.push({id:Date.now()+'_'+Math.random().toString(36).substr(2,5),file:file,dataUrl:e.target.result,tag:state.images.length===0?'메인컷':'포유컷'});
+      var defaultTags=['메인컷','정면컷','착용컷','소재컷','사이즈컷','내부컷','디테일컷','포유컷'];
+      var autoTag=defaultTags[Math.min(state.images.length,defaultTags.length-1)];
+      state.images.push({id:Date.now()+'_'+Math.random().toString(36).substr(2,5),file:file,dataUrl:e.target.result,tag:autoTag});
       loaded++;if(loaded===imgs.length){renderImages();schedulePreview();}
     };r.readAsDataURL(file);
   });
@@ -856,7 +862,7 @@ function gSz(){
   return{type:'multi',sizes:all};
 }
 function collect(){
-  return{bagType:gC('bagType'),leather:gC('leather'),colors:gC('colors'),wearStyle:gC('wearStyle'),interior:gInt(),production:gR('production'),productionDetail:document.getElementById('productionDetail').value.trim(),targetAge:gC('targetAge'),recommend:gC('recommend'),productName:document.getElementById('productName').value.trim(),weight:document.getElementById('weight').value.trim(),brandName:document.getElementById('brandName').value.trim(),brandTagline:document.getElementById('brandTagline').value.trim(),brandStory:document.getElementById('brandStory').value.trim(),brandLogoData:state.brandLogoData||'',brandHeroData:state.brandHeroData||'',storyText:document.getElementById('storyText').value.trim(),strapMin:document.getElementById('strapMin').value.trim(),strapMax:document.getElementById('strapMax').value.trim(),sizes:gSz(),shippingText:document.getElementById('shippingText').value,theme:gR('theme')||'beige',pageWidth:parseInt(gR('pageWidth')||'860'),fontFamily:gR('fontFamily')||'Noto Sans KR',fontScale:parseInt(document.getElementById('fontSizeRange').value)||100,sections:gC('sections'),customColors:customColors.slice(),images:state.images};
+  return{bagType:gC('bagType'),leather:gC('leather'),colors:gC('colors'),wearStyle:gC('wearStyle'),interior:gInt(),production:gR('production'),productionDetail:document.getElementById('productionDetail').value.trim(),targetAge:gC('targetAge'),recommend:gC('recommend'),forYouCustom:document.getElementById('forYouCustom').value.trim(),productName:document.getElementById('productName').value.trim(),weight:document.getElementById('weight').value.trim(),brandName:document.getElementById('brandName').value.trim(),brandTagline:document.getElementById('brandTagline').value.trim(),brandStory:document.getElementById('brandStory').value.trim(),brandLogoData:state.brandLogoData||'',brandHeroData:state.brandHeroData||'',storyText:document.getElementById('storyText').value.trim(),strapMin:document.getElementById('strapMin').value.trim(),strapMax:document.getElementById('strapMax').value.trim(),sizes:gSz(),shippingText:document.getElementById('shippingText').value,theme:gR('theme')||'beige',pageWidth:parseInt(gR('pageWidth')||'860'),fontFamily:gR('fontFamily')||'Noto Sans KR',fontScale:parseInt(document.getElementById('fontSizeRange').value)||100,sections:gC('sections'),customColors:customColors.slice(),images:state.images};
 }
 
 /* ===== Image by Tag Helpers ===== */
@@ -1085,8 +1091,8 @@ function buildHTML(data){
   }
 
   // ⑦ 추천 대상 (포유컷 + 스토리)
-  if(S.indexOf('target')>=0&&data.recommend.length>0){
-    var recTxt=buildRecStory(data);
+  if(S.indexOf('target')>=0&&(data.recommend.length>0||data.forYouCustom)){
+    var recTxt=data.forYouCustom||buildRecStory(data);
     var fyImgs=imgsByTag('포유컷');
     h+='<div class="detail-section" data-section="target" style="'+P+'">';h+=sh('FOR YOU');
     if(fyImgs.length>0){fyImgs.slice(0,10).forEach(function(fi){h+='<img src="'+fi.dataUrl+'" style="width:100%;display:block;border-radius:8px;margin-bottom:12px;" alt="포유컷">';});}
